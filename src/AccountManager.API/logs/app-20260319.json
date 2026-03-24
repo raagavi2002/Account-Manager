@@ -1,0 +1,431 @@
+2026-03-19 15:06:46.081 +05:30 [WRN] You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-03-19 15:06:46.404 +05:30 [WRN] You do not have a valid license key for the Lucky Penny software AutoMapper. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+2026-03-19 15:06:46.519 +05:30 [INF] Registered 15 endpoints in 3,232 milliseconds.
+2026-03-19 15:06:46.720 +05:30 [INF] Info in : [Development] Unknown.KafkaOutboxWorker.ExecuteAsync - Kafka Outbox Worker starting. BatchSize=20, MaxRetries=10, PollingInterval=60s
+2026-03-19 15:06:47.150 +05:30 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert.
+2026-03-19 15:06:47.292 +05:30 [INF] Now listening on: https://localhost:7094
+2026-03-19 15:06:47.299 +05:30 [INF] Now listening on: http://localhost:5145
+2026-03-19 15:06:47.742 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-03-19 15:06:47.749 +05:30 [INF] Hosting environment: Development
+2026-03-19 15:06:47.754 +05:30 [INF] Content root path: D:\December\account-manager\src\AccountManager.API
+2026-03-19 15:06:50.878 +05:30 [INF] Info in : [Development] Unknown.KafkaOutboxWorker.ProcessBatchAsync - Processing {Count} outbox messages
+2026-03-19 15:11:51.761 +05:30 [ERR] Error in : [Development] Unknown.1.Create - Local: Message timed out
+2026-03-19 15:11:51.761 +05:30 [ERR] Error in : [Development] Unknown.1.Create - Local: Message timed out
+2026-03-19 15:11:51.761 +05:30 [ERR] Error in : [Development] Unknown.1.Create - Local: Message timed out
+2026-03-19 15:11:51.761 +05:30 [ERR] Error in : [Development] Unknown.00:00:30.Create - Local: Message timed out
+2026-03-19 15:11:51.761 +05:30 [ERR] Error in : [Development] Unknown.1.Create - Local: Message timed out
+2026-03-19 15:11:51.793 +05:30 [ERR] Error in : [Development] Unknown.1.Create - Local: Message timed out
+2026-03-19 15:11:52.319 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 4 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:11:52.319 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 2 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:11:52.319 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 3 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:11:52.319 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 1 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:11:52.319 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 5 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:11:52.449 +05:30 [ERR] An exception occurred while iterating over the results of a query for context type 'AccountManager.Infrastructure.Persistence.AccountManagerDbContext'.
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-03-19 15:11:52.449 +05:30 [ERR] An exception occurred while iterating over the results of a query for context type 'AccountManager.Infrastructure.Persistence.AccountManagerDbContext'.
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-03-19 15:11:52.449 +05:30 [ERR] An exception occurred while iterating over the results of a query for context type 'AccountManager.Infrastructure.Persistence.AccountManagerDbContext'.
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-03-19 15:11:52.455 +05:30 [ERR] An exception occurred while iterating over the results of a query for context type 'AccountManager.Infrastructure.Persistence.AccountManagerDbContext'.
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2026-03-19 15:11:52.855 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessBatchAsync - Error in ProcessBatchAsync | Details: [Depth: 0] InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ForEachAsync[T](IQueryable`1 source, Action`1 action, CancellationToken cancellationToken)
+at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ForEachAsync[T](IQueryable`1 source, Action`1 action, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Outbox.OutboxRepository.IncrementRetryAsync(Int64 eventId, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\OutboxRepository.cs:line 126
+
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ForEachAsync[T](IQueryable`1 source, Action`1 action, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ForEachAsync[T](IQueryable`1 source, Action`1 action, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.OutboxRepository.IncrementRetryAsync(Int64 eventId, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\OutboxRepository.cs:line 126
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 239
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessBatchAsync(CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 176
+2026-03-19 15:14:00.727 +05:30 [INF] Info in : [Development] Unknown.KafkaOutboxWorker.ProcessBatchAsync - Processing {Count} outbox messages
+2026-03-19 15:14:00.734 +05:30 [ERR] Error in : [Development] Unknown.KafkaResiliencePolicy.Create - Kafka circuit half-open, testing...
+2026-03-19 15:14:00.772 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 2 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:14:00.822 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 3 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:14:00.864 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 4 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222
+2026-03-19 15:14:00.914 +05:30 [ERR] Exception in : [Development] Unknown.KafkaOutboxWorker.ProcessSingleMessageAsync - Circuit breaker open for message 5 on topic account-manager.account-events | Details: [Depth: 0] BrokenCircuitException: The circuit is now open and is not allowing calls.
+at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+Inner Exception:
+[Depth: 1] ProduceException`2: Local: Message timed out
+at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+
+Polly.CircuitBreaker.BrokenCircuitException: The circuit is now open and is not allowing calls.
+ ---> Confluent.Kafka.ProduceException`2[System.String,System.String]: Local: Message timed out
+   at Confluent.Kafka.Producer`2.ProduceAsync(TopicPartition topicPartition, Message`2 message, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(String key, String payload, CancellationToken cancellationToken) in D:\December\account-manager\src\AccountManager.Infrastructure\Kafka\Producer\KafkaEventPublisher.cs:line 100
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.<>c__DisplayClass8_0.<<ProcessSingleMessageAsync>b__0>d.MoveNext() in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 225
+--- End of stack trace from previous location ---
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.<>c__DisplayClass8_0`1.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   --- End of inner exception stack trace ---
+   at Polly.CircuitBreaker.CircuitStateController`1.OnActionPreExecute()
+   at Polly.CircuitBreaker.AsyncCircuitBreakerEngine.ImplementationAsync[TResult](Func`3 action, Context context, Boolean continueOnCapturedContext, ExceptionPredicates shouldHandleExceptionPredicates, ResultPredicates`1 shouldHandleResultPredicates, ICircuitController`1 breakerController, CancellationToken cancellationToken)
+   at Polly.CircuitBreaker.AsyncCircuitBreakerPolicy.ImplementationAsync[TResult](Func`3 action, Context context, CancellationToken cancellationToken, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.<>c__DisplayClass44_0.<<ImplementationAsync>b__0>d.MoveNext()
+--- End of stack trace from previous location ---
+   at Polly.Retry.AsyncRetryEngine.ImplementationAsync[TResult](Func`3 action, Context context, ExceptionPredicates shouldRetryExceptionPredicates, ResultPredicates`1 shouldRetryResultPredicates, Func`5 onRetryAsync, CancellationToken cancellationToken, Int32 permittedRetryCount, IEnumerable`1 sleepDurationsEnumerable, Func`4 sleepDurationProvider, Boolean continueOnCapturedContext)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at Polly.AsyncPolicy.ExecuteInternalAsync(Func`3 action, Context context, Boolean continueOnCapturedContext, CancellationToken cancellationToken)
+   at AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(KafkaProducedEventDto message, IOutboxRepository repository, IEventPublisher publisher, CancellationToken ct) in D:\December\account-manager\src\AccountManager.Infrastructure\Outbox\Workers\KafkaOutboxWorker.cs:line 222

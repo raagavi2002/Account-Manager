@@ -1,0 +1,1880 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AccountManager.Infrastructure</name>
+    </assembly>
+    <members>
+        <member name="T:AccountManager.Infrastructure.Authorization.Caching.PermissionCacheOptions">
+            <summary>
+            Configuration options for session-based permission caching.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Authorization.Caching.PermissionCacheOptions.SessionTtlMinutes">
+            <summary>
+            Gets or sets the time-to-live, in minutes, for cached session permission entries.
+            Defaults to 30 minutes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Authorization.Caching.PermissionCacheOptions.KeyPrefix">
+            <summary>
+            Gets or sets a cache key prefix to avoid collisions across environments/services.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Authorization.Caching.SessionPermissionCache">
+            <summary>
+            Redis-backed implementation of <see cref="T:AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache"/> using <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Authorization.FieldPermissionValidator">
+            <summary>
+            Concrete implementation of <see cref="T:AccountManager.Application.Authorization.Interfaces.IFieldPermissionValidator"/>.
+            Validates field-level permissions for update operations by comparing
+            original vs updated objects and checking user permissions for each changed field.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.FieldPermissionValidator.#ctor(AccountManager.Application.Authorization.Interfaces.IPermissionCalculator,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Authorization.FieldPermissionValidator"/> class.
+            </summary>
+            <param name="permissionCalculator"> An instance of the permission calculator.</param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.FieldPermissionValidator.ValidateFieldUpdatesAsync``1(AccountManager.Application.Authorization.Models.UserContext,``0,``0,System.Threading.CancellationToken)">
+            <summary>
+            Validates permissions for all fields being updated.
+            Compares original vs updated object and checks permission for each changed field.
+            </summary>
+            <typeparam name="T">The type of object being validated.</typeparam>
+            <param name="userContext">The user context containing identity and permissions.</param>
+            <param name="original">The original object before update.</param>
+            <param name="updated">The updated object after changes.</param>
+            <param name="cancellationToken">Optional cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Authorization.Models.FieldValidationResult"/> containing:
+            - <c>IsValid</c>: true if all field updates are permitted, false otherwise
+            - <c>FieldResults</c>: detailed results for each field
+            - <c>DeniedFields</c>: list of fields the user is not allowed to update
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.FieldPermissionValidator.ValidateSingleFieldAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates a single field update.
+            </summary>
+            <param name="userContext">The user context containing identity and permissions.</param>
+            <param name="fieldName">The name of the field being updated.</param>
+            <param name="cancellationToken">Optional cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.FieldPermissionResult"/> indicating:
+            - <c>IsGranted</c>: whether the user has permission for the field
+            - <c>RequiredPermission</c>: the permission string required
+            - <c>DenialReason</c>: explanation if permission is denied
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.FieldPermissionValidator.GetRequiredPermissionForField(System.String)">
+            <summary>
+            Gets the required permission for a specific field.
+            </summary>
+            <param name="fieldName">The name of the field.</param>
+            <returns>
+            The permission string required to update the field, or <c>null</c> if no permission is required.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.FieldPermissionValidator.GetChangedFields``1(``0,``0)">
+            <summary>
+            Determines which fields have changed between two objects.
+            </summary>
+            <typeparam name="T">The type of object being compared.</typeparam>
+            <param name="original">The original object.</param>
+            <param name="updated">The updated object.</param>
+            <returns>
+            A list of field names that differ between the original and updated objects.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Authorization.PermissionResolver">
+            <summary>
+            Provides functionality to resolve and validate user permission contexts.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionResolver.#ctor(AccountManager.Domain.Interfaces.IUserRepository,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Authorization.PermissionResolver"/> class.
+            </summary>
+            <param name="userRepository">Repository for accessing user data and roles.</param>
+            <param name="logger">Application logger for recording authorization events.</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionResolver.ResolveUserContextAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Resolves the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> for a given user and account.
+            </summary>
+            <param name="userId">The unique identifier of the user.</param>
+            <param name="accountId">Optional account identifier. If not provided, the user's primary account is used.</param>
+            <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
+            <returns>A <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> containing user roles, account assignments, and context information.</returns>
+            <exception cref="T:System.UnauthorizedAccessException">
+            Thrown when the user is not found or inactive.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown when no account context can be resolved.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionResolver.ValidateContextAsync(AccountManager.Application.Authorization.Models.UserContext,System.Threading.CancellationToken)">
+            <summary>
+            Validates the provided <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> against role and account access rules.
+            </summary>
+            <param name="userContext">The user context to validate.</param>
+            <param name="cancellationToken">Token to cancel the asynchronous operation.</param>
+            <returns><c>true</c> if the context is valid; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Authorization.PermissionValidator">
+            <summary>
+            Validates user permissions and account access by evaluating effective permissions
+            and enforcing authorization rules.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionValidator.#ctor(AccountManager.Application.Authorization.Interfaces.IPermissionCalculator,AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Authorization.PermissionValidator"/> class.
+            </summary>
+            <param name="permissionCalculator">
+            Service responsible for computing effective permissions and their sources.
+            </param>
+            <param name="logger">
+            Application logger used for audit and warning logs.
+            </param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionValidator.ValidatePermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates whether the specified user has a required permission.
+            </summary>
+            <param name="userContext">The current user context.</param>
+            <param name="requiredPermission">The permission to validate.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> indicating whether the permission was granted or denied.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionValidator.ValidateAccountAccessAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates whether the specified user has access to a target account.
+            </summary>
+            <param name="userContext">The current user context.</param>
+            <param name="targetAccountId">The identifier of the account being accessed.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>
+            <c>true</c> if the user has access to the account; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionValidator.ValidateMultiplePermissionsAsync(AccountManager.Application.Authorization.Models.UserContext,System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
+            <summary>
+            Validates multiple permissions for a user in a single operation.
+            </summary>
+            <param name="userContext">The current user context.</param>
+            <param name="permissions">The collection of permissions to validate.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>
+            A dictionary mapping each permission to its corresponding <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Authorization.PermissionValidator.EnsurePermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Ensures that the specified user has a required permission.
+            </summary>
+            <param name="userContext">The current user context.</param>
+            <param name="requiredPermission">The permission that must be granted.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <exception cref="T:AccountManager.Domain.Exceptions.PermissionDeniedException">
+            Thrown when the user does not have the required permission.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.DependencyInjection">
+            <summary>
+            Provides methods for configuring and managing dependency injection
+            within the AccountManager application.
+            </summary>
+            <remarks>
+            This class is intended to register services, repositories, and other
+            dependencies to the application's IoC container.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Infrastructure.DependencyInjection.AddInfrastructure(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds all infrastructure services to the service collection.
+            </summary>
+            <param name="services">The service collection to add to.</param>
+            <param name="configuration">The configuration instance.</param>
+            <returns>The service collection for chaining.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if services or configuration is null.</exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Events.EventFactory">
+            <summary>
+            Default implementation of <see cref="T:AccountManager.Application.Events.IEventFactory"/>
+            responsible for creating domain events using
+            runtime configuration.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Events.EventFactory.#ctor(Microsoft.Extensions.Options.IOptions{AccountManager.Shared.Configuration.ServiceConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Events.EventFactory"/> class.
+            </summary>
+            <param name="config">
+            Configuration containing service identity and event settings.
+            </param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Events.EventFactory.CreateEvent``2(``1,AccountManager.Domain.Events.Models.EventMetadata)">
+            <summary>
+            Creates a new domain event instance of type <typeparamref name="TEvent"/> with the specified event data and metadata.
+            </summary>
+            <typeparam name="TEvent">The type of event to create. Must inherit from <see cref="T:AccountManager.Domain.Events.Models.BaseEvent`1"/> and have a parameterless constructor.</typeparam>
+            <typeparam name="TData">The type of the event data.</typeparam>
+            <param name="data">The event data to include in the event.</param>
+            <param name="metadata">The metadata associated with the event.</param>
+            <returns>A new instance of <typeparamref name="TEvent"/> populated with the provided data and metadata.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Configuration.ConsumerOptions">
+            <summary>
+            Configuration options for Kafka consumers.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.ConsumerOptions.GroupId">
+            <summary>
+            Gets the consumer group ID used to identify the consumer group for Kafka.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.ConsumerOptions.Topics">
+            <summary>
+            Gets the list of Kafka topics that this consumer subscribes to.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Configuration.DeadLetterQueueOptions">
+            <summary>
+            Represents configuration options for the Kafka dead-letter queue.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.DeadLetterQueueOptions.DeadLetterTopic">
+            <summary>
+            Gets the name of the Kafka topic used as the dead-letter queue.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions">
+            <summary>
+            Configuration options for connecting to and interacting with a Kafka cluster.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions.BootstrapServers">
+            <summary>
+            Gets the Kafka bootstrap servers in the format "host1:port1,host2:port2".
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions.KafkaSecurityOptions">
+            <summary>
+            Gets the security-related configuration options for Kafka connections.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions.ProducerOptions">
+            <summary>
+            Gets the configuration options for Kafka producers.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions.ConsumerOptions">
+            <summary>
+            Gets the configuration options for Kafka consumers.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions.DeadLetterQueueOptions">
+            <summary>
+            Gets the configuration options for the dead-letter queue.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Configuration.KafkaSecurityOptions">
+            <summary>
+            Represents security-related configuration options for connecting to a Kafka cluster.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaSecurityOptions.Username">
+            <summary>
+            Gets the username used for authentication with the Kafka broker.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaSecurityOptions.Password">
+            <summary>
+            Gets the password used for authentication with the Kafka broker.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.KafkaSecurityOptions.Mechanism">
+            <summary>
+            Gets the SASL mechanism used for authentication.
+            Defaults to <c>SCRAM-SHA-512</c>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Configuration.ProducerOptions">
+            <summary>
+            Configuration options for Kafka producers.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Kafka.Configuration.ProducerOptions.AccountEventsTopic">
+            <summary>
+            Gets the name of the Kafka topic used for account-related events.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher">
+            <summary>
+            Publishes domain events to Kafka topics using a string key and a JSON-serialized payload.
+            </summary>
+            <remarks>
+            <para>
+            This class encapsulates a Kafka producer instance which is thread-safe and reusable
+            for multiple publish operations.
+            </para>
+            <para>
+            It supports publishing both single messages and batches of messages to:
+            <list type="bullet">
+            <item>
+            <description>The account events topic</description>
+            </item>
+            <item>
+            <description>The dead-letter queue topic</description>
+            </item>
+            </list>
+            </para>
+            <para>
+            The class implements <see cref="T:System.IDisposable"/> to ensure Kafka resources are
+            properly flushed and released.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.#ctor(Microsoft.Extensions.Options.IOptions{AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher"/> class.
+            </summary>
+            <param name="options">
+            The Kafka configuration options containing bootstrap servers,
+            topic names, and producer settings.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="options"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Publishes a single message to the account events Kafka topic.
+            </summary>
+            <param name="key">
+            The message key used for Kafka partitioning.
+            </param>
+            <param name="payload">
+            The JSON-serialized message payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>
+            A task that represents the asynchronous publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToAccountEventTopicAsync(System.Collections.Generic.IReadOnlyCollection{System.ValueTuple{System.String,System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Publishes multiple messages to the account events Kafka topic.
+            </summary>
+            <param name="messages">
+            A collection of messages where each item contains a message key
+            and a JSON-serialized payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while publishing the messages.
+            </param>
+            <returns>
+            A task that represents the asynchronous batch publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+            <remarks>
+            Messages are produced sequentially to preserve ordering within
+            the scope of this call.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToDeadLetterQueueTopicAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Publishes a single message to the dead-letter queue Kafka topic.
+            </summary>
+            <param name="key">
+            The message key used for Kafka partitioning.
+            </param>
+            <param name="payload">
+            The JSON-serialized message payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>
+            A task that represents the asynchronous publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.PublishToDeadLetterQueueTopicAsync(System.Collections.Generic.IReadOnlyCollection{System.ValueTuple{System.String,System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Publishes multiple messages to the dead-letter queue Kafka topic.
+            </summary>
+            <param name="messages">
+            A collection of messages where each item contains a message key
+            and a JSON-serialized payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while publishing the messages.
+            </param>
+            <returns>
+            A task that represents the asynchronous batch publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.Dispose">
+            <summary>
+            Flushes any buffered Kafka messages and releases all managed resources.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Kafka.Producer.KafkaEventPublisher.ThrowIfDisposed">
+            <summary>
+            Throws an <see cref="T:System.ObjectDisposedException"/> if the publisher
+            has already been disposed.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown when the publisher is disposed.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.AppLogger">
+            <summary>
+            Provides structured, high-performance, and context-rich logging across all application layers.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.#ctor(Microsoft.Extensions.Logging.ILogger{AccountManager.Infrastructure.Logging.AppLogger},Microsoft.Extensions.Options.IOptions{AccountManager.Shared.Configuration.AppConfig},System.TimeProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Logging.AppLogger"/> class.
+            </summary>
+            <param name="applogger">The logger instance used for logging operations.</param>
+            <param name="appConfigOptions">Application configuration options.</param>
+            <param name="timeprovider">Time provider used for timestamp generation.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="applogger"/> or <paramref name="appConfigOptions"/> is null.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.LogException(System.Exception,System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an exception with contextual metadata.
+            </summary>
+            <param name="ex">The exception to log.</param>
+            <param name="message">A message describing the context of the exception.</param>
+            <param name="additionalInfo">Optional additional diagnostic data.</param>
+            <param name="filePath">Caller file path (compiler supplied).</param>
+            <param name="methodName">Caller member name (compiler supplied).</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.LogError(System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an error message with contextual metadata.
+            </summary>
+            <param name="message">The error message to log.</param>
+            <param name="additionalInfo">Optional additional diagnostic data.</param>
+            <param name="filePath">Caller file path (compiler supplied).</param>
+            <param name="methodName">Caller member name (compiler supplied).</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.LogInformation(System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an informational message with contextual metadata.
+            </summary>
+            <param name="message">The informational message to log.</param>
+            <param name="additionalInfo">Optional additional diagnostic data.</param>
+            <param name="filePath">Caller file path (compiler supplied).</param>
+            <param name="methodName">Caller member name (compiler supplied).</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.LogWarning(System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs a warning message with contextual metadata.
+            </summary>
+            <param name="message">The warning message to log.</param>
+            <param name="additionalInfo">Optional additional diagnostic data.</param>
+            <param name="filePath">Caller file path (compiler supplied).</param>
+            <param name="methodName">Caller member name (compiler supplied).</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.AppLogger.BeginScope``1(``0)">
+            <summary>
+            Begins a logical operation scope for structured logging.
+            </summary>
+            <typeparam name="TState">The type of the scope state.</typeparam>
+            <param name="state">The scope state.</param>
+            <returns>An <see cref="T:System.IDisposable"/> that ends the scope.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.AppLogger.__LogExceptionInternalStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.AppLogger.__LogErrorInternalStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.AppLogger.__LogInformationInternalStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.AppLogger.__LogWarningInternalStruct">
+            <summary> This API supports the logging infrastructure and is not intended to be used directly from your code. It is subject to change in the future. </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Logging.SerilogExtensions">
+            <summary>
+            Provides extension methods for configuring Serilog logging.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Logging.SerilogExtensions.ConfigureSerilog(Serilog.LoggerConfiguration,Microsoft.Extensions.Configuration.IConfiguration,System.IServiceProvider)">
+            <summary>
+            Configures Serilog with settings from the provided configuration and service provider.
+            </summary>
+            <param name="loggerConfig">The Serilog logger configuration.</param>
+            <param name="configuration">The application configuration.</param>
+            <param name="services">The service provider.</param>
+            <returns>The configured <see cref="T:Serilog.LoggerConfiguration"/>.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Outbox.OutboxRepository">
+            <summary>
+            Provides an Entity Framework Core–based implementation of the outbox repository
+            used to persist and manage Kafka-produced events.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.#ctor(AccountManager.Infrastructure.Persistence.AccountManagerDbContext,Microsoft.Extensions.Options.IOptions{AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions})">
+            <summary>
+            Provides an Entity Framework Core–based implementation of the outbox repository
+            used to persist and manage Kafka-produced events.
+            </summary>
+        </member>
+        <member name="F:AccountManager.Infrastructure.Outbox.OutboxRepository.accountEventsTopic">
+            <summary>
+            The Kafka topic used for publishing account-related events.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.GetPendingKafkaProducedEvents(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a batch of pending Kafka-produced events ordered by creation time.
+            </summary>
+            <param name="maxEvents">The maximum number of events to retrieve.</param>
+            <param name="cancellationToken">A token used to cancel the operation.</param>
+            <returns>
+            A read-only list of pending Kafka-produced event data transfer objects.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.MarkAsDeadLetterBatchAsync(System.Collections.Generic.List{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Marks the specified Kafka-produced events as dead-lettered after exceeding
+            the maximum number of retry attempts.
+            </summary>
+            <param name="eventIds">The identifiers of the events to update.</param>
+            <param name="cancellationToken">A token used to cancel the operation.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.MarkAsProcessedAsync(System.Collections.Generic.List{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Marks the specified Kafka-produced events as successfully processed
+            and published to Kafka.
+            </summary>
+            <param name="eventIds">The identifiers of the events to update.</param>
+            <param name="cancellationToken">A token used to cancel the operation.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.IncrementRetryAsync(System.Int64,System.Threading.CancellationToken)">
+            <summary>
+            Increments the retry count for the specified Kafka-produced event and
+            updates the error message to indicate a retry attempt.
+            </summary>
+            <param name="eventId">The identifier of the event to update.</param>
+            <param name="cancellationToken">A token used to cancel the operation.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.OutboxRepository.AddKafkaProducedEventAsync(AccountManager.Domain.DTO.KafkaProducedEventDto,System.Threading.CancellationToken)">
+            <summary>
+            Adds a new Kafka-produced event to the outbox for later publishing.
+            </summary>
+            <param name="kafkaProducedEventDto">
+            The Kafka-produced event data to persist.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the operation.
+            </param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker">
+            <summary>
+            Background worker responsible for processing Kafka outbox messages.
+            <para>
+            This worker implements the Outbox Pattern to ensure reliable event publishing
+            by reading pending events from persistent storage and publishing them to Kafka
+            with retry, circuit breaker, and dead-letter queue support.
+            </para>
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,AccountManager.Shared.Logging.IApplogger,Microsoft.Extensions.Options.IOptions{AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions},Polly.IAsyncPolicy)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker"/> class.
+            </summary>
+            <param name="scopeFactory">
+            Factory used to create dependency injection scopes for each processing batch.
+            </param>
+            <param name="logger">
+            Application logger used for structured logging.
+            </param>
+            <param name="options">
+            Configuration options controlling batch size, retry limits, and polling intervals.
+            </param>
+            <param name="kafkaPolicy">
+            Polly resilience policy applied to Kafka publishing operations
+            (e.g., retries, circuit breaker).
+            </param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ExecuteAsync(System.Threading.CancellationToken)">
+            <summary>
+            Executes the background worker loop.
+            <para>
+            Continuously polls for pending outbox messages, processes them in batches,
+            and respects graceful shutdown signals via the provided cancellation token.
+            </para>
+            </summary>
+            <param name="stoppingToken">
+            Token that signals when the host is shutting down.
+            </param>
+            <returns>A task representing the lifetime of the background service.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessBatchAsync(System.Threading.CancellationToken)">
+            <summary>
+            Processes a single batch of outbox messages.
+            <para>
+            Messages are categorized into eligible and dead-letter groups based on retry count.
+            Eligible messages are published to Kafka with controlled parallelism, while
+            permanently failed messages are moved to the dead-letter queue.
+            </para>
+            </summary>
+            <param name="ct">
+            Cancellation token used to cancel batch processing.
+            </param>
+            <returns>A task representing the asynchronous batch operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Outbox.Workers.KafkaOutboxWorker.ProcessSingleMessageAsync(AccountManager.Domain.DTO.KafkaProducedEventDto,AccountManager.Application.Abstractions.Messaging.IOutboxRepository,AccountManager.Application.Interfaces.IEventPublisher,System.Threading.CancellationToken)">
+            <summary>
+            Processes a single outbox message.
+            <para>
+            Publishes the message to Kafka using a resilience policy and updates the
+            outbox state based on the outcome (processed or retry increment).
+            </para>
+            </summary>
+            <param name="message">The outbox message to process.</param>
+            <param name="repository">Repository used to update outbox state.</param>
+            <param name="publisher">Kafka event publisher.</param>
+            <param name="ct">Cancellation token.</param>
+            <returns>
+            <c>true</c> if the message was successfully processed; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions">
+            <summary>
+            Configuration options for the Kafka outbox processor.
+            <para>
+            These options control batching behavior, retry limits, polling frequency,
+            and parallel processing for the Kafka outbox background worker.
+            </para>
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions.BatchSize">
+            <summary>
+            Gets or sets the maximum number of outbox messages
+            to retrieve and process in a single batch.
+            </summary>
+            <remarks>
+            Larger batch sizes increase throughput but may increase memory usage
+            and processing latency.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions.MaxRetries">
+            <summary>
+            Gets or sets the maximum number of retry attempts allowed
+            for an outbox message before it is moved to the dead-letter queue.
+            </summary>
+            <remarks>
+            Once this threshold is reached, the message is considered permanently
+            failed and will no longer be retried.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions.PollingIntervalSeconds">
+            <summary>
+            Gets or sets the polling interval, in seconds, used by the outbox worker
+            to check for new pending messages.
+            </summary>
+            <remarks>
+            Lower values reduce latency but increase database load.
+            Higher values reduce load but may delay event publication.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Outbox.Workers.OutboxProcessorOptions.MaxParallelism">
+            <summary>
+            Gets or sets the maximum number of messages
+            that can be processed concurrently.
+            </summary>
+            <remarks>
+            This value controls parallelism and should be tuned based on
+            Kafka throughput, database capacity, and available system resources.
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.Account">
+            <summary>
+            Represents an account entity in the Account Manager system.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AccountName">
+            <summary>
+            Gets or sets the name of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AccountType">
+            <summary>
+            Gets or sets the type of the account (e.g., PROFESSIONAL, ENTERPRISE).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AccountStatus">
+            <summary>
+            Gets or sets the current status of the account (e.g., ACTIVE, INACTIVE).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressStreet">
+            <summary>
+            Gets or sets the street address of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressStreet2">
+            <summary>
+            Gets or sets the secondary street address line (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressCity">
+            <summary>
+            Gets or sets the city of the account's address.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressState">
+            <summary>
+            Gets or sets the state or province of the account's address.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressPostalCode">
+            <summary>
+            Gets or sets the postal code of the account's address.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AddressCountry">
+            <summary>
+            Gets or sets the country of the account's address.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.Currency">
+            <summary>
+            Gets or sets the currency code used by the account (e.g., USD, EUR).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.Timezone">
+            <summary>
+            Gets or sets the timezone for the account (e.g., America/New_York).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.DateFormat">
+            <summary>
+            Gets or sets the date format preference for the account (e.g., MM/DD/YYYY).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.TimeFormat">
+            <summary>
+            Gets or sets the time format preference for the account (e.g., 12h, 24h).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.Locale">
+            <summary>
+            Gets or sets the locale for the account (e.g., en-US, fr-FR).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.VatNumber">
+            <summary>
+            Gets or sets the VAT (Value Added Tax) number for the account (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.IsHeadAccount">
+            <summary>
+            Gets or sets a value indicating whether this account is a head account in a hierarchical structure.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AccountManagerId">
+            <summary>
+            Gets or sets the identifier of the account manager responsible for this account (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.CsmId">
+            <summary>
+            Gets or sets the identifier of the Customer Success Manager (CSM) for this account (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the account was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.CreatedBy">
+            <summary>
+            Gets or sets the identifier of the user who created the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.UpdatedBy">
+            <summary>
+            Gets or sets the identifier of the user who last updated the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.ActivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was activated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.DeactivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was deactivated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.DeletedAt">
+            <summary>
+            Gets or sets the date and time when the account was soft-deleted.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.Version">
+            <summary>
+            Gets or sets the version number for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the account is currently active.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.InvoiceEmailAddress">
+            <summary>
+            Gets or sets the email address for receiving invoices (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.InvoiceType">
+            <summary>
+            Gets or sets the type of invoice delivery (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.NotificationEmailAddress">
+            <summary>
+            Gets or sets the email address for receiving notifications (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.AccountId">
+            <summary>
+            Gets or sets the unique identifier for the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.HeadAccountId">
+            <summary>
+            Gets or sets the identifier of the parent head account, if this is a child account (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Account.Users">
+            <summary>
+            Gets or sets the collection of users associated with this account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship">
+            <summary>
+            Represents a hierarchical relationship between a head account and a sub-account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.AccountRelationshipId">
+            <summary>
+            Gets or sets the unique identifier for the account relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.EstablishedBy">
+            <summary>
+            Gets or sets the identifier of the user who established this relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.EstablishedAt">
+            <summary>
+            Gets or sets the date and time when the relationship was established.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.RelationshipStatus">
+            <summary>
+            Gets or sets the current status of the relationship (e.g., ACTIVE, INACTIVE).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.RemovedAt">
+            <summary>
+            Gets or sets the date and time when the relationship was removed (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.RemovedBy">
+            <summary>
+            Gets or sets the identifier of the user who removed this relationship (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.Version">
+            <summary>
+            Gets or sets the version number for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.HeadAccountId">
+            <summary>
+            Gets or sets the identifier of the head (parent) account in the relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AccountRelationship.SubAccountId">
+            <summary>
+            Gets or sets the identifier of the sub (child) account in the relationship.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry">
+            <summary>
+            Represents an entry in the audit log, capturing details of operations performed
+            on entities within the system for accountability and traceability.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.Id">
+            <summary>
+            Gets or sets the unique identifier for the audit log entry.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.Operation">
+            <summary>
+            Gets or sets the type of operation performed (e.g., create, update, delete).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.EntityType">
+            <summary>
+            Gets or sets the type of entity involved in the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.EntityId">
+            <summary>
+            Gets or sets the unique identifier of the entity affected by the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.RelatedEntityId">
+            <summary>
+            Gets or sets the identifier of a related entity, if applicable.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.ActorUserId">
+            <summary>
+            Gets or sets the identifier of the user who performed the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.OccurredAtUtc">
+            <summary>
+            Gets or sets the UTC timestamp when the operation occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.Outcome">
+            <summary>
+            Gets or sets the outcome of the operation (e.g., success, failure).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.AuditStatus">
+            <summary>
+            Gets or sets the audit status of the entry.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.Reason">
+            <summary>
+            Gets or sets the reason provided for the operation, if any.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.PreviousState">
+            <summary>
+            Gets or sets the previous state of the entity in JSON format.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.NewState">
+            <summary>
+            Gets or sets the new state of the entity in JSON format.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.ChangedFields">
+            <summary>
+            Gets or sets the fields that were changed during the operation in JSON format.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.IsGdprRequest">
+            <summary>
+            Gets or sets a value indicating whether the operation was related to a GDPR request.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.AuditLogEntry.CorrelationId">
+            <summary>
+            Gets or sets the correlation identifier used to group related audit log entries.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent">
+            <summary>
+            Represents an event that has been produced to Kafka for event-driven communication.
+            Tracks the status and metadata of outbound Kafka messages for audit and retry purposes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.Id">
+            <summary>
+            Gets or sets the unique identifier for the Kafka produced event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.EventType">
+            <summary>
+            Gets or sets the type of the event being produced (e.g., AccountCreated, UserUpdated).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.ProducerService">
+            <summary>
+            Gets or sets the name of the service that produced this event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.Payload">
+            <summary>
+            Gets or sets the JSON payload of the event message.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.ProducedAt">
+            <summary>
+            Gets or sets the date and time when the event was produced.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.CorrelationId">
+            <summary>
+            Gets or sets the correlation identifier for tracking related events across services.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.Status">
+            <summary>
+            Gets or sets the current status of the event production (e.g., PENDING, SUCCESS, FAILED).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.ErrorMessage">
+            <summary>
+            Gets or sets the error message if the event production failed (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.RetryCount">
+            <summary>
+            Gets or sets the number of retry attempts for failed event production (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.TopicName">
+            <summary>
+            Gets or sets the name of the Kafka topic to which the event was produced.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.KafkaProducedEvent.AccountId">
+            <summary>
+            Gets or sets the identifier of the account associated with this event (optional).
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation">
+            <summary>
+            Represents the association between an account and a product.
+            Tracks product subscriptions, licenses, or entitlements for accounts.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.ProductAssociationId">
+            <summary>
+            Gets or sets the unique identifier for the product association.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.AccountId">
+            <summary>
+            Gets or sets the identifier of the account associated with the product.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.ProductId">
+            <summary>
+            Gets or sets the identifier of the product associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.ProductName">
+            <summary>
+            Gets or sets the name of the product.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.ProductStatus">
+            <summary>
+            Gets or sets the current status of the product association (e.g., ACTIVE, EXPIRED, SUSPENDED).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the product association is currently active.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.ExpirationDate">
+            <summary>
+            Gets or sets the expiration date for the product association, if applicable (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the product association was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the product association was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.LastSyncedAt">
+            <summary>
+            Gets or sets the date and time when the product association was last synchronized with external systems.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.ProductAssociation.Version">
+            <summary>
+            Gets or sets the version number for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.Role">
+            <summary>
+            Represents a role that defines permissions and access levels within the Account Manager system.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Role.Id">
+            <summary>
+            Gets or sets the unique identifier for the role.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Role.RoleType">
+            <summary>
+            Gets or sets the numeric type identifier for the role, used for categorization or hierarchical organization.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Role.RoleName">
+            <summary>
+            Gets or sets the name of the role (e.g., Administrator, User, Manager).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Role.UserRoles">
+            <summary>
+            Gets or sets the collection of user-role assignments associated with this role.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.Timezone">
+            <summary>
+            Represents a timezone entity stored in the database.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Timezone.Id">
+            <summary>
+            Gets or sets the unique identifier for the timezone.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.Timezone.Name">
+            <summary>
+            Gets or sets the name of the timezone.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.User">
+            <summary>
+            Represents a user entity in the Account Manager system.
+            Users belong to accounts and can have multiple roles assigned through UserRole associations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.Email">
+            <summary>
+            Gets or sets the email address of the user. Must be unique across the system.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.FirstName">
+            <summary>
+            Gets or sets the first name of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.LastName">
+            <summary>
+            Gets or sets the last name of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.ClerkUserId">
+            <summary>
+            Gets or sets the Clerk authentication service user identifier (optional).
+            Used for integration with the Clerk authentication platform.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user account is currently active.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.LastLoginAt">
+            <summary>
+            Gets or sets the date and time when the user last logged in (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.LoginCount">
+            <summary>
+            Gets or sets the total number of times the user has logged in.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the user was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.CreatedBy">
+            <summary>
+            Gets or sets the identifier of the user who created this user account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the user was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.UpdatedBy">
+            <summary>
+            Gets or sets the identifier of the user who last updated this user account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.DeactivatedAt">
+            <summary>
+            Gets or sets the date and time when the user was deactivated (optional).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.Version">
+            <summary>
+            Gets or sets the version number for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.AccountId">
+            <summary>
+            Gets or sets the identifier of the account to which this user belongs.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.UserId">
+            <summary>
+            Gets or sets the unique identifier for the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.Account">
+            <summary>
+            Gets or sets the account to which this user belongs.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.User.UserRoles">
+            <summary>
+            Gets or sets the collection of role assignments for this user.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Entities.UserRole">
+            <summary>
+            Represents the association between a user and a role, implementing a many-to-many relationship.
+            Supports temporal role assignments with effective date ranges.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.UserRoleId">
+            <summary>
+            Gets or sets the unique identifier for the user-role assignment.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.RoleName">
+            <summary>
+            Gets or sets the name of the role assigned to the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.EffectiveFrom">
+            <summary>
+            Gets or sets the date and time when the role assignment becomes effective.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.EffectiveTo">
+            <summary>
+            Gets or sets the date and time when the role assignment expires (optional).
+            If null, the role assignment has no expiration date.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.AssignedBy">
+            <summary>
+            Gets or sets the identifier of the user who assigned this role.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the role assignment was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.RoleId">
+            <summary>
+            Gets or sets the identifier of the role being assigned.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.RoleType">
+            <summary>
+            Gets or sets the numeric type identifier for the role, used for categorization.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.UserId">
+            <summary>
+            Gets or sets the identifier of the user to whom the role is assigned.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.Role">
+            <summary>
+            Gets or sets the role entity associated with this assignment.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.Entities.UserRole.User">
+            <summary>
+            Gets or sets the user entity associated with this role assignment.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Repository.AccountRelationshipRepository">
+            <summary>
+            Repository responsible for managing account relationship persistence operations.
+            </summary>
+            <param name="context">The database context used to access account relationship data.</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRelationshipRepository.#ctor(AccountManager.Infrastructure.Persistence.AccountManagerDbContext)">
+            <summary>
+            Repository responsible for managing account relationship persistence operations.
+            </summary>
+            <param name="context">The database context used to access account relationship data.</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRelationshipRepository.CreateHeadSubAccountRelationshipAsync(System.Guid,System.Guid)">
+            <summary>
+            Creates a relationship between a head account and a sub-account.
+            </summary>
+            <param name="headAccountId">The unique identifier of the head account.</param>
+            <param name="subaccountId">The unique identifier of the sub-account to be linked.</param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.LinkSubAccountResult"/> containing details of the newly created relationship.
+            </returns>
+            <exception cref="T:System.Exception">
+            Thrown when an error occurs while creating the account relationship.
+            </exception>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:AccountManager.Infrastructure.Persistence.Repository.AccountRelationshipRepository.UnlinkSubAccountAsync(AccountManager.Domain.DTO.UnlinkSubAccountDto)" -->
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRelationshipRepository.GetAccountRelationshipAsync(System.Guid,System.Guid)">
+            <summary>
+            Retrieves an active account relationship between a head account and a subaccount.
+            </summary>
+            <param name="headAccountId">
+            The unique identifier of the head (parent) account.
+            </param>
+            <param name="subaccountId">
+            The unique identifier of the sub (child) account.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains an <see cref="T:AccountManager.Application.DTO.AccountRelationshipDto"/> if an active relationship exists;
+            otherwise, <c>null</c>.
+            </returns>
+            <remarks>
+            This method only returns relationships with a status of <see cref="F:AccountManager.Domain.Enums.AccountRelationshipStatus.Active"/>.
+            If no active relationship is found, the result will be <c>null</c>.
+            </remarks>
+            <exception cref="T:System.Exception">
+            Thrown if an unexpected error occurs during the database query.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Repository.AccountRepository">
+            <summary>
+            Repository for managing account entities in the data store.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.#ctor(AccountManager.Infrastructure.Persistence.AccountManagerDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Persistence.Repository.AccountRepository"/> class.
+            </summary>
+            <param name="context">The database context to be used by the repository.</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.CheckAccountExistsAsync(System.String)">
+            <summary>
+            Checks whether an account with the specified name already exists in the system.
+            </summary>
+            <param name="accountName">The account name to check for existence.</param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains <c>true</c> if an account with the specified name exists; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="accountName"/> is null.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown when <paramref name="accountName"/> is empty or whitespace.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.CheckAccountExistsAsync(System.Guid)">
+            <summary>
+            Checks whether an account with the specified name already exists in the system.
+            </summary>
+            <param name="accountId">The account id to check for existence.</param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains <c>true</c> if an account with the specified accountId exists; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="accountId"/> is null.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.CreateAccountAsync(AccountManager.Domain.DTO.CreateAccountDto)">
+            <summary>
+            Creates a new account in the underlying data store.
+            </summary>
+            <param name="accountDto">
+            A data transfer object containing the account information to be created.
+            </param>
+            <returns>
+            A task that represents the asynchronous create operation.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.GetAccountInfoByIdAsync(System.Guid)">
+            <summary>
+            Retrieves account information for the specified account identifier.
+            </summary>
+            <param name="accountId">
+            The unique identifier of the account.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains the account information as an <see cref="T:AccountManager.Domain.DTO.AccountDto"/>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.UpdateAccountStatusAsync(System.Guid,System.String,System.Boolean)">
+            <summary>
+            Asynchronously updates the status of a specified account.
+            </summary>
+            <param name="accountId">
+            The unique identifier of the account whose status needs to be updated.
+            </param>
+            <param name="accountStatus">
+            The new status to assign to the account.
+            This could represent values such as "Active", "Inactive", or "Suspended".
+            </param>
+            <param name="isArchive">flag representing the account is archived or not.</param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task will complete once the account status has been updated.
+            </returns>
+            <remarks>
+            Use this method when you need to change the state of an account without blocking the calling thread.
+            Ensure that the provided <paramref name="accountStatus"/> is valid within the system's domain rules.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.UpdateHeadSubAccountInfoAsync(System.Guid,System.Guid)">
+            <summary>
+            Updates the head account and sub-account relationship information in the database context.
+            </summary>
+            <param name="headAccountId">The unique identifier of the head account.</param>
+            <param name="subAccountId">The unique identifier of the sub-account to be linked.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.UpdateAccountAsync(AccountManager.Domain.DTO.UpdateAccountDto)">
+            <summary>
+            Updates an existing account with the values provided in the account data transfer object.
+            Only fields that contain values are updated; all other fields remain unchanged.
+            </summary>
+            <param name="accountDto">
+            The data transfer object containing updated account information.
+            Fields that are <c>null</c>, empty, or whitespace are ignored.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.UpdateAccountResult"/> containing the account identifier,
+            updated version, and audit information after the update.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountNotFoundException">
+            Thrown when an account with the specified identifier does not exist.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.GetInvoicingTypeAsync(System.Guid)">
+            <summary>
+            Retrieves the invoicing type for the specified account.
+            </summary>
+            <param name="accountId">
+            The unique identifier of the account whose invoicing type is requested.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains the invoicing type associated with the account,
+            or an empty string if no invoicing type is defined.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountNotFoundException">
+            Thrown when an account with the specified <paramref name="accountId"/> does not exist.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.GetAllTimezonesAsync">
+            <summary>
+            Retrieves all available time zones supported by the system.
+            </summary>
+            <remarks>
+            This method queries the underlying data source or service to return a list of
+            <see cref="T:AccountManager.Domain.DTO.TimezoneDto"/> objects, each representing a valid time zone.
+            </remarks>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> representing the asynchronous operation,
+            with a result of type <see cref="T:System.Collections.Generic.List`1"/> containing <see cref="T:AccountManager.Domain.DTO.TimezoneDto"/> entries.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.GetTimezoneByIdAsync(System.Int32)">
+            <summary>
+            Retrieves a timezone by its unique identifier.
+            </summary>
+            <param name="timezoneId">The unique identifier of the timezone.</param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.DTO.TimezoneDto"/> containing the timezone ID and IANA name,
+            or <c>null</c> if no matching timezone is found.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.GetAccountProductsAsync(System.Guid,System.Nullable{System.Boolean},System.Int32,System.Int32)">
+            <summary>
+            Retrieves products associated with an account using optional active-state filtering and pagination.
+            </summary>
+            <param name="accountId">The account identifier.</param>
+            <param name="isActive">Optional filter to return only active or inactive product associations.</param>
+            <param name="pageSize">The page size.</param>
+            <param name="pageNumber">The page number starting at 1.</param>
+            <returns>
+            A tuple containing the paginated products and the total matching count before pagination.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.UnlinkSubAccountAsync(System.Guid,System.Guid)">
+            <summary>
+            Asynchronously unlinks a sub-account from its head account.
+            </summary>
+            <param name="headAccountId">The unique identifier of the head account.</param>
+            <param name="subAccountId">The unique identifier of the sub-account to be unlinked.</param>
+            <returns>A task representing the asynchronous unlink operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.AccountRepository.CheckTimezoneExistsAsync(System.String)">
+            <summary>
+            Checks whether an timezone with the specified name already exists in the system.
+            </summary>
+            <param name="timezone">The timezone to check for existence.</param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains <c>true</c> if an timezone with the specified name exists; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="timezone"/> is null.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Repository.AuditLog.AuditLogRepository">
+            <summary>
+            Implements persistence for audit log entries.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.Repository.UserRepository">
+            <summary>
+            Provides data access operations related to users.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.#ctor(AccountManager.Infrastructure.Persistence.AccountManagerDbContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Persistence.Repository.UserRepository"/> class.
+            </summary>
+            <param name="context">The database context used for data access.</param>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.AddUserAsync(AccountManager.Domain.DTO.AddUserDto)">
+            <summary>
+            Adds a new user to the specified account.
+            </summary>
+            <param name="userDto">The data transfer object containing user information.</param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains an <see cref="T:AccountManager.Domain.Results.AddUserResult"/> with details of the added user.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.HasMainClientUserAsync(System.Guid)">
+            <summary>
+            Determines whether the specified account has at least one user
+            assigned the <see cref="F:AccountManager.Domain.Enums.UserRoleType.MainClient"/> role.
+            </summary>
+            <param name="accountId">The identifier of the account.</param>
+            <returns>
+            <c>true</c> if the account has a main client user; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.GetUserWithRolesAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a user along with their associated roles from the database.
+            </summary>
+            <param name="userId">
+            The unique identifier of the user as a string. 
+            This will be compared against the <see cref="P:AccountManager.Infrastructure.Persistence.Entities.User.UserId"/> property.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests. Defaults to <see cref="P:System.Threading.CancellationToken.None"/>.
+            </param>
+            <returns>
+            A task representing the asynchronous operation. The task result contains the <see cref="T:AccountManager.Infrastructure.Persistence.Entities.User"/> 
+            object with its related roles if found; otherwise, <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.GetUserByIdAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a user by their unique identifier asynchronously and maps the result to a <see cref="T:AccountManager.Domain.DTO.UserDto"/>.
+            </summary>
+            <param name="userId">
+            The unique identifier of the user to retrieve.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the task to complete.
+            </param>
+            <returns>
+            A task representing the asynchronous operation. The task result contains
+            the <see cref="T:AccountManager.Domain.DTO.UserDto"/> if found; otherwise, <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.UpdateUserStatusAsync(System.Guid,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Updates the status of a user by their unique identifier.
+            </summary>
+            <param name="userId">
+            The unique identifier of the user whose status should be updated.
+            </param>
+            <param name="status">
+            The new status value as a string. Expected values are "ACTIVE" or "INACTIVE".
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the task to complete.
+            </param>
+            <returns>
+            A task representing the asynchronous operation. The task result is <c>true</c> if the update succeeded,
+            or <c>false</c> if the user was not found or the status value was invalid.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            Thrown when the provided status string is not recognized.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.IsUserInRoleAsync(System.Guid,AccountManager.Domain.Enums.UserRoleType,System.Threading.CancellationToken)">
+            <summary>
+            Determines whether a user is active and assigned to the specified role.
+            </summary>
+            <param name="userId">
+            The unique identifier of the user.
+            </param>
+            <param name="roleType">
+            The role type to verify against the user's assigned roles.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            <c>true</c> if the user is active and has the specified role; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.EmailExistsAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Checks whether a user with the specified email address already exists in the system.
+            The comparison is case-insensitive to prevent near-duplicate entries.
+            </summary>
+            <param name="email">The email address to check for existence.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that returns <c>true</c> if the email already exists;
+            otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="email"/> is null or empty.</exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.DuplicateNameExistsAsync(System.String,System.String,System.Nullable{System.Guid},System.Threading.CancellationToken)">
+            <summary>
+            Checks whether a user with the specified first name and last name combination already exists.
+            The comparison is case-insensitive. An optional <paramref name="excludeUserId"/> can be
+            provided to exclude a specific user from the check, which is useful during update operations.
+            </summary>
+            <param name="firstName">The first name to check for duplication.</param>
+            <param name="lastName">The last name to check for duplication.</param>
+            <param name="excludeUserId">
+            An optional user ID to exclude from the duplicate check. Pass the current user's ID
+            when validating an update to avoid false positives against the same record.
+            </param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> that returns <c>true</c> if a duplicate name combination
+            exists; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="firstName"/> or <paramref name="lastName"/> is null or empty.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.GetAccountUsersAsync(System.Guid,System.Nullable{System.Boolean},System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves users associated with an account with optional filtering and pagination.
+            </summary>
+            <param name="accountId">The account identifier.</param>
+            <param name="isActive">Optional filter for active/inactive users.</param>
+            <param name="role">Optional filter for user role.</param>
+            <param name="pageSize">The number of results per page (max 100).</param>
+            <param name="pageNumber">The page number starting from 1.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>
+            A task representing the asynchronous operation. The task result contains a tuple with
+            the list of users and the total count of matching users.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.Repository.UserRepository.CheckUserIdExistsAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Checks asynchronously whether a user with the specified <paramref name="userId"/> exists in the database.
+            </summary>
+            <param name="userId">The unique identifier of the user to check.</param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests. Defaults to <see cref="P:System.Threading.CancellationToken.None"/>.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation. The task result contains 
+            <c>true</c> if a user with the given ID exists; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.UnitOfWork">
+            <summary>
+            Implements the Unit of Work pattern to coordinate repository operations
+            and manage database transactions within a single business transaction.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.#ctor(AccountManager.Infrastructure.Persistence.AccountManagerDbContext,Microsoft.Extensions.Options.IOptions{AccountManager.Infrastructure.Kafka.Configuration.KafkaOptions})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Persistence.UnitOfWork"/> class.
+            </summary>
+            <param name="amDbContext">The Entity Framework database context.</param>
+            <param name="kafkaoptions">The Kafka configuration options.</param>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.Accounts">
+            <summary>
+            Gets the account repository instance.
+            Uses lazy initialization to create the repository on first access.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.Outbox">
+            <summary>
+            Gets the outbox repository instance.
+            Uses lazy initialization to create the repository on first access.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.User">
+            <summary>
+            Gets the user repository instance.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.AccountRelationship">
+            <summary>
+            Gets the account relationship instance.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.AuditLogs">
+            <summary>
+            Gets the audit log repository instance.
+            Uses lazy initialization to create the repository on first access.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Persists all changes made in this context to the database.
+            </summary>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous save operation.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.BeginTransactionAsync(System.Threading.CancellationToken,System.Nullable{System.Data.IsolationLevel})">
+            <summary>
+            Begins a new database transaction with optional isolation level.
+            </summary>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <param name="isolationLevel">The isolation level for the transaction. If null, uses the default isolation level.</param>
+            <returns>A task that represents the asynchronous operation, containing the transaction wrapper.</returns>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.CommitTransactionAsync(AccountManager.Application.Abstractions.ITransaction,System.Threading.CancellationToken)">
+            <summary>
+            Commits the specified transaction, persisting all changes to the database.
+            </summary>
+            <param name="transaction">The transaction to commit.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous commit operation.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when the transaction is not of type <see cref="T:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction"/>.</exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.RollbackTransactionAsync(AccountManager.Application.Abstractions.ITransaction,System.Threading.CancellationToken)">
+            <summary>
+            Rolls back the specified transaction, discarding all changes.
+            </summary>
+            <param name="transaction">The transaction to roll back.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous rollback operation.</returns>
+            <exception cref="T:System.InvalidOperationException">Thrown when the transaction is not of type <see cref="T:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction"/>.</exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.ExecuteInTransactionAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+            <summary>
+            Executes the specified action within a database transaction using an execution strategy
+            to handle transient failures. Automatically commits on success or rolls back on failure.
+            </summary>
+            <param name="action">The action to execute within the transaction.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="action"/> is null.</exception>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.ExecuteInTransactionAsync``1(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Executes the specified function within a database transaction using an execution strategy
+            to handle transient failures. Automatically commits on success or rolls back on failure.
+            </summary>
+            <typeparam name="TResult">The type of the result returned by the function.</typeparam>
+            <param name="func">The function to execute within the transaction.</param>
+            <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
+            <returns>A task representing the asynchronous operation, containing the result of the function.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <paramref name="func"/> is null.</exception>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction">
+            <summary>
+            Wraps an Entity Framework Core transaction to provide a common transaction abstraction.
+            Ensures proper disposal of the underlying transaction resource.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction"/> class.
+            </summary>
+            <param name="inner">The underlying EF Core database transaction.</param>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction.Inner">
+            <summary>
+            Gets the underlying Entity Framework Core database transaction.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction.IsCompleted">
+            <summary>
+            Gets a value indicating whether the transaction has been completed (committed or rolled back).
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Persistence.UnitOfWork.EfCoreTransaction.DisposeAsync">
+            <summary>
+            Asynchronously disposes the transaction, ensuring it is properly cleaned up.
+            </summary>
+            <returns>A task representing the asynchronous dispose operation.</returns>
+        </member>
+        <member name="T:AccountManager.Infrastructure.Resiliencez.KafkaResiliencePolicy">
+            <summary>
+            Provides Polly-based resilience policies for Kafka producers,
+            including retry and circuit breaker strategies.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Infrastructure.Resiliencez.KafkaResiliencePolicy.Create(AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Creates a composed asynchronous resilience policy for Kafka operations.
+            </summary>
+            <param name="logger">
+            The application logger used to record retry and circuit breaker events.
+            </param>
+            <returns>
+            An <see cref="T:Polly.IAsyncPolicy"/> that applies retry and circuit breaker behavior
+            to Kafka produce operations.
+            </returns>
+        </member>
+    </members>
+</doc>

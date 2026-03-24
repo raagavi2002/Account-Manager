@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  dev-account-manager-service:
+    build:
+      context: .
+      dockerfile: src/AccountManager.API/Dockerfile-Development
+    ports:
+    - "8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development

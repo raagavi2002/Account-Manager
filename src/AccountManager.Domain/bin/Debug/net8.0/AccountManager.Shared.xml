@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AccountManager.Shared</name>
+    </assembly>
+    <members>
+        <member name="T:AccountManager.Shared.Configuration.AppConfig">
+            <summary>
+            Represents application configuration settings.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.AppConfig.ServiceName">
+            <summary>
+            Gets or sets the name of the service.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.AppConfig.ServiceVersion">
+            <summary>
+            Gets or sets the version of the service.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Shared.Configuration.OpenSearchSettings">
+            <summary>
+            Represents configuration settings for OpenSearch logging.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.NodeUrl">
+            <summary>
+            Gets or sets the URL of the OpenSearch node.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.UserName">
+            <summary>
+            Gets or sets the username for OpenSearch authentication.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.Password">
+            <summary>
+            Gets or sets the password for OpenSearch authentication.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.IndexFormat">
+            <summary>
+            Gets or sets the index format for storing logs. Defaults to "logs-{0:yyyy.MM.dd}".
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.BatchPostingLimit">
+            <summary>
+            Gets or sets the maximum number of events to post in a single batch. Defaults to 50.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.Period">
+            <summary>
+            Gets or sets the period, in seconds, between batch postings. Defaults to 30.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.EnableSsl">
+            <summary>
+            Gets or sets a value indicating whether SSL is enabled. Defaults to true.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.OpenSearchSettings.ValidateCertificates">
+            <summary>
+            Gets or sets a value indicating whether SSL certificates should be validated. Defaults to true.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Shared.Configuration.ServiceConfiguration">
+            <summary>
+            Configuration options for service identification in events.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.ServiceConfiguration.ServiceId">
+            <summary>
+            Gets the unique identifier for this service (e.g., "account-manager").
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.ServiceConfiguration.ServiceName">
+            <summary>
+            Gets the human-readable name of this service (e.g., "Account Manager").
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Configuration.ServiceConfiguration.InstanceId">
+            <summary>
+            Gets the specific instance/pod identifier for this service instance.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Shared.Logging.IApplogger">
+            <summary>
+            Defines a contract for application logging functionality, including exceptions, errors, and informational messages.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Shared.Logging.IApplogger.LogException(System.Exception,System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an exception with an optional custom message and additional information.
+            </summary>
+            <param name="ex">The exception to be logged.</param>
+            <param name="message">A descriptive message associated with the exception.</param>
+            <param name="additionalInfo">Optional additional context information to log.</param>
+            <param name="filePath">
+            The full source file path of the caller. Automatically populated by the compiler.
+            </param>
+            <param name="methodName">
+            The name of the calling method. Automatically populated by the compiler.
+            </param>
+        </member>
+        <member name="M:AccountManager.Shared.Logging.IApplogger.LogError(System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an error message with optional additional information.
+            </summary>
+            <param name="message">The error message to log.</param>
+            <param name="additionalInfo">Optional additional context information to log.</param>
+            <param name="filePath">
+            The full source file path of the caller. Automatically populated by the compiler.
+            </param>
+            <param name="methodName"> The name of the calling method. Automatically populated by the compiler.
+            </param>
+        </member>
+        <member name="M:AccountManager.Shared.Logging.IApplogger.LogInformation(System.String,System.Object,System.String,System.String)">
+            <summary>
+            Logs an informational message with optional additional information.
+            </summary>
+            <param name="message">The informational message to log.</param>
+            <param name="additionalInfo">Optional additional context information to log.</param>
+            <param name="filePath">
+            The full source file path of the caller. Automatically populated by the compiler.
+            </param>
+            <param name="methodName">
+            The name of the calling method. Automatically populated by the compiler.
+            </param>
+        </member>
+        <member name="T:AccountManager.Shared.Logging.LogMetaData">
+            <summary>
+            Represents metadata information for logging purposes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.ServiceName">
+            <summary>
+            Gets the name of the service.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.ServiceVersion">
+            <summary>
+            Gets the version of the service.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.Environment">
+            <summary>
+            Gets the environment where the service is running (e.g., Development, Production).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.ProjectLayer">
+            <summary>
+            Gets the project layer (e.g., Application, Domain, Infrastructure).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.ClassName">
+            <summary>
+            Gets the name of the class generating the log.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.MethodName">
+            <summary>
+            Gets the name of the method generating the log.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.Timestamp">
+            <summary>
+            Gets the timestamp when the log entry was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Logging.LogMetaData.CorrelationId">
+            <summary>
+            Gets the optional correlation ID for tracing requests across systems.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Shared.Messaging.EventEnvelope`1">
+            <summary>
+            Represents a standardized envelope for events exchanged through the messaging system.
+            </summary>
+            <typeparam name="T">
+            The type of the event payload.
+            </typeparam>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.EventId">
+            <summary>
+            Gets the unique identifier of the event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.EventType">
+            <summary>
+            Gets the logical type of the event (e.g., OrderCreated).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.EventVersion">
+            <summary>
+            Gets the version of the event schema.
+            Defaults to <c>1.0</c>.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.Timestamp">
+            <summary>
+            Gets the UTC timestamp indicating when the event occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.CorrelationId">
+            <summary>
+            Gets the identifier used to correlate related events across services.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.Source">
+            <summary>
+            Gets the source that produced the event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.Metadata">
+            <summary>
+            Gets optional metadata providing additional contextual information about the event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventEnvelope`1.Data">
+            <summary>
+            Gets the event payload.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Shared.Messaging.EventMetadata">
+            <summary>
+            Provides contextual metadata associated with an event,
+            typically used for auditing, tracing, and multi-tenant support.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.UserId">
+            <summary>
+            Gets User who triggered the action (email or user id).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.UserRole">
+            <summary>
+            Gets Role of the user (ADMIN, MAIN_CLIENT, etc.)
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.TraceId">
+            <summary>
+            Gets Distributed tracing trace identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.SpanId">
+            <summary>
+            Gets Distributed tracing span identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.TenantId">
+            <summary>
+            Gets Tenant identifier for multi-tenant systems.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.Application">
+            <summary>
+            Gets Application name (e.g. Account Manager).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.Project">
+            <summary>
+            Gets Project or assembly name emitting the event.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.Class">
+            <summary>
+            Gets Domain class or aggregate name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Shared.Messaging.EventMetadata.Method">
+            <summary>
+            Gets Method or command that caused the event.
+            </summary>
+        </member>
+    </members>
+</doc>

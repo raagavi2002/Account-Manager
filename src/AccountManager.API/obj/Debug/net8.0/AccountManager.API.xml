@@ -1,0 +1,2148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AccountManager.API</name>
+    </assembly>
+    <members>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpoint">
+            <summary>
+            API endpoint for archiving an account.
+            Handles incoming requests, maps them to domain DTOs,
+            executes the archive command via MediatR, and returns the response.
+            </summary>
+            <param name="mapper"> Provides object-to-object mapping between request/response models and DTOs </param>
+            <param name="mediator"> Mediator for sending commands and receiving responses in a decoupled manner.
+            </param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountEndpoint.#ctor(AutoMapper.IMapper,MediatR.IMediator)">
+            <summary>
+            API endpoint for archiving an account.
+            Handles incoming requests, maps them to domain DTOs,
+            executes the archive command via MediatR, and returns the response.
+            </summary>
+            <param name="mapper"> Provides object-to-object mapping between request/response models and DTOs </param>
+            <param name="mediator"> Mediator for sending commands and receiving responses in a decoupled manner.
+            </param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and summary.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountEndpoint.HandleAsync(AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the archive account request by mapping the request to a DTO,
+            sending the command via MediatR, and returning the mapped response.
+            </summary>
+            <param name="archiveAccountEndpointRequest">The incoming API request to archive an account.</param>
+            <param name="cancellationToken">Token to cancel the operation if needed.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest">
+            <summary>
+            Represents a request to archive an account, containing necessary information
+            such as account identifier, GDPR compliance flag, and reason for archival.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account to be archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest.IsGdprRequest">
+            <summary>
+            Gets or sets a value indicating whether the archival request
+            is made due to GDPR requirements.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest.Reason">
+            <summary>
+            Gets or sets the reason for archiving the account.
+            This may include business, compliance, or user-requested reasons.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest.RequiredPermission">
+            <summary>
+            Gets the permission required to perform the archival operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <summary>
+            Gets the account identifier as a string for permission validation.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse">
+            <summary>
+            Represents the endpoint response if the account has been archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.IsArchived">
+            <summary>
+            Gets or sets a value indicating whether the account has been archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.ArchivedAt">
+            <summary>
+            Gets or sets the date and time when the account was archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.ArchivedBy">
+            <summary>
+            Gets or sets the identifier (e.g., username or system actor) of the entity that archived the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.IsGDPRComplaint">
+            <summary>
+            Gets or sets a value indicating whether the archival process is compliant with GDPR regulations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse.Reason">
+            <summary>
+            Gets or sets the reason why the account has been archived.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountRequestMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            API request models and domain data transfer objects (DTOs)
+            related to account archival operations.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountRequestMapping"/> class.
+            Configures the mapping between <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest"/> and <see cref="T:AccountManager.Domain.DTO.ArchiveAccountDto"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountResponseMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            application command responses and API response models
+            related to account archival operations.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountResponseMapping"/> class.
+            Configures the mapping between <see cref="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse"/> and <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointResponse"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Archive.ArchiveAccountValidator">
+            <summary>
+            Validator for <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountEndpointRequest"/>.
+            Ensures all required properties are provided and valid.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Archive.ArchiveAccountValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Archive.ArchiveAccountValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountEndpoint">
+            <summary>
+            Endpoint for creating a new client account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for creating a new client account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountEndpoint.Configure">
+            <summary>
+            Configures the endpoint for creating a new account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountEndpoint.HandleAsync(AccountManager.API.Accounts.Create.CreateAccountRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the creation of a new account.
+            </summary>
+            <param name="req">The request containing account details.</param>
+            <param name="ct">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountMapping">
+            <summary>
+            AutoMapper profile responsible for mapping create account
+            API request models to domain DTOs.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Create.CreateAccountMapping"/> class
+            and configures mapping definitions for account creation.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountRequest">
+            <summary>
+            Represents a request to create a new account.
+            Implements <see cref="T:AccountManager.API.Authorization.IRequirePermission"/> to enforce authorization requirements.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.AccountName">
+            <summary>
+            Gets or sets the name of the account.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the account name.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.AccountType">
+            <summary>
+            Gets or sets the type of the account.
+            </summary>
+            <remarks>
+            This value typically represents a business classification such as
+            customer, partner, or internal account.
+            </remarks>
+            <returns>A <see cref="T:System.String"/> representing the account type.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.Currency">
+            <summary>
+            Gets or sets the currency used by the account.
+            </summary>
+            <remarks>
+            Expected to be an ISO 4217 currency code (e.g., EUR, USD).
+            </remarks>
+            <returns>A <see cref="T:System.String"/> representing the currency code.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.Timezone">
+            <summary>
+            Gets or sets the timezone associated with the account.
+            </summary>
+            <remarks>
+            Expected to be a valid IANA or system timezone identifier.
+            </remarks>
+            <returns>A nullable <see cref="T:System.Int32"/> representing the timezone ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.AddressInfo">
+            <summary>
+            Gets or sets the physical address of the account.
+            </summary>
+            <returns>A <see cref="T:AccountManager.API.Accounts.Create.CreateAddressRequest"/> containing address details.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.VatNumber">
+            <summary>
+            Gets or sets the VAT number associated with the account.
+            </summary>
+            <returns>A nullable <see cref="T:System.String"/> containing the VAT number.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.AccountManagerId">
+            <summary>
+            Gets or sets the identifier of the account manager responsible for the account.
+            </summary>
+            <returns>A nullable <see cref="T:System.Guid"/> representing the account manager ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.CsmId">
+            <summary>
+            Gets or sets the identifier of the customer success manager (CSM) assigned to the account.
+            </summary>
+            <returns>A nullable <see cref="T:System.Guid"/> representing the CSM ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.HeadAccountId">
+            <summary>
+            Gets or sets the identifier of the head or parent account.
+            </summary>
+            <returns>A nullable <see cref="T:System.Guid"/> representing the head account ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.InvoiceEmailAddress">
+            <summary>
+            Gets or sets the email address used for billing communications.
+            </summary>
+            <returns>A nullable <see cref="T:System.String"/> containing the billing email address.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.InvoiceType">
+            <summary>
+            Gets or sets the billing type for the account.
+            </summary>
+            <returns>A nullable <see cref="T:System.String"/> representing the invoice type.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.NotificationEmailAddress">
+            <summary>
+            Gets or sets the email address used for account notifications.
+            </summary>
+            <returns>A nullable <see cref="T:System.String"/> containing the notification email address.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.RequiredPermission">
+            <summary>
+            Gets the permission required to create an account.
+            </summary>
+            <returns>A <see cref="T:System.String"/> representing the required permission key.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountRequest.AccountId">
+            <summary>
+            Gets the account identifier for permission checks.
+            For new accounts, this is empty until the account is created.
+            </summary>
+            <returns>A nullable <see cref="T:System.String"/> containing the account ID.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountResponse">
+            <summary>
+            Represents the response returned after successfully creating an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the created account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.AccountName">
+            <summary>
+            Gets or sets the name of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.AccountType">
+            <summary>
+            Gets or sets the type of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.AccountStatus">
+            <summary>
+            Gets or sets the current status of the account.
+            </summary>
+            <remarks>
+            Examples include Active, Inactive, or Pending.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.Currency">
+            <summary>
+            Gets or sets the currency associated with the account.
+            </summary>
+            <remarks>
+            Expected to be an ISO 4217 currency code (e.g. EUR, USD).
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.Timezone">
+            <summary>
+            Gets or sets the timezone associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.Version">
+            <summary>
+            Gets or sets the current version of the account record.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the account was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAccountResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountResponseMapping">
+            <summary>
+            AutoMapper profile that defines mappings for account creation responses.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Create.CreateAccountResponseMapping"/> class
+            and configures mappings between application and API response models.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAccountValidator">
+            <summary>
+            Validator for <see cref="T:AccountManager.API.Accounts.Create.CreateAccountRequest"/> that enforces
+            required fields for account creation.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAccountValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Create.CreateAccountValidator"/> class
+            and defines validation rules for account creation.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAddressRequest">
+            <summary>
+            Represents a physicaladdress.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.Street">
+            <summary>
+            Gets or sets the primary street address.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.Street2">
+            <summary>
+            Gets or sets additional street address information,
+            such as an apartment or suite number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.City">
+            <summary>
+            Gets or sets the city or locality.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.State">
+            <summary>
+            Gets or sets the state, province, or region.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.PostalCode">
+            <summary>
+            Gets or sets the postal or ZIP code.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Create.CreateAddressRequest.Country">
+            <summary>
+            Gets or sets the country.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Create.CreateAddressValidator">
+            <summary>
+            Validator for <see cref="T:AccountManager.API.Accounts.Create.CreateAddressRequest"/> that enforces
+            required address fields.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Create.CreateAddressValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Create.CreateAddressValidator"/> class
+            and defines validation rules for address creation.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequest">
+            <summary>
+            Represents a request to retrieve the details of an account by its unique identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequestMapping">
+            <summary>
+            AutoMapper profile for mapping API requests to application query requests.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequestMapping"/> class.
+            Configures mapping from <see cref="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequest"/> to <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryRequest"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse">
+            <summary>
+            Represents the response containing detailed information about an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.AccountName">
+            <summary>
+            Gets or sets the account name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.AccountType">
+            <summary>
+            Gets or sets the account type.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.Currency">
+            <summary>
+            Gets or sets the account currency code (e.g., USD, EUR).
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.Timezone">
+            <summary>
+            Gets or sets the time zone identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.Address">
+            <summary>
+            Gets or sets the primary address associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.VatNumber">
+            <summary>
+            Gets or sets the VAT number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.AccountManagerId">
+            <summary>
+            Gets or sets the account manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.CsmId">
+            <summary>
+            Gets or sets the customer success manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.HeadAccountId">
+            <summary>
+            Gets or sets the parent (head) account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.InvoiceEmailAddress">
+            <summary>
+            Gets or sets the email address used for billing communications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.InvoiceType">
+            <summary>
+            Gets or sets the billing type for the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.NotificationEmailAddress">
+            <summary>
+            Gets or sets the email address used for account notifications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.AccountStatus">
+            <summary>
+            Gets or sets the status of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.Version">
+            <summary>
+            Gets or sets the current version of the account entity.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.IsHeadAccount">
+            <summary>
+            Gets or sets a value indicating whether this account is a head (parent) account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the account was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.ActivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was activated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIResponse.DeactivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was deactivated.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsEndpoint">
+            <summary>
+            Endpoint for handling HTTP GET requests to retrieve detailed information about a specific account.
+            </summary>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance used to send application queries.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for handling HTTP GET requests to retrieve detailed information about a specific account.
+            </summary>
+            <param name="mediator">The <see cref="T:MediatR.IMediator"/> instance used to send application queries.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsEndpoint.HandleAsync(AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsAPIRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the HTTP GET request to retrieve detailed information about a specific account by its identifier.
+            </summary>
+            <param name="ct">A cancellation token.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsEndpoint.Configure">
+            <summary>
+            Configures the endpoint for retrieving account details.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsResponseMapping">
+            <summary>
+            AutoMapper profile for mapping application responses to API responses.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetAccountDetails.GetAccountDetailsResponseMapping"/> class.
+            Configures AutoMapper mappings for account details responses.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest">
+            <summary>
+            Represents a request to retrieve products associated with an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.AccountId">
+            <summary>
+            Gets or sets the account identifier from the route.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.IsActive">
+            <summary>
+            Gets or sets an optional active-state filter.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.PageNumber">
+            <summary>
+            Gets or sets the page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.RequiredPermission">
+            <inheritdoc/>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <inheritdoc/>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequestMapping">
+            <summary>
+            AutoMapper profile for account-products API request mapping.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequestMapping"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse">
+            <summary>
+            Represents the paginated account-products response.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse.Products">
+            <summary>
+            Gets or sets the product associations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse.TotalCount">
+            <summary>
+            Gets or sets the total number of matching products.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse.PageNumber">
+            <summary>
+            Gets or sets the current page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIResponse.HasMore">
+            <summary>
+            Gets or sets a value indicating whether more pages are available.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsEndpoint">
+            <summary>
+            Endpoint for retrieving products associated with an account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for retrieving products associated with an account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsEndpoint.Configure">
+            <summary>
+            Configures endpoint metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsEndpoint.HandleAsync(AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsAPIRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="req">The request object.</param>
+            <param name="ct">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsResponseMapping">
+            <summary>
+            AutoMapper profile for account-products API response mapping.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsResponseMapping"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsValidator">
+            <summary>
+            Validates account-products query parameters.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetAccountProducts.GetAccountProductsValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetTimezone.GetTimezoneEndpoint">
+            <summary>
+            Endpoint for retrieving a list of supported timezones.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetTimezone.GetTimezoneEndpoint.#ctor(MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.GetTimezone.GetTimezoneEndpoint"/> class.
+            </summary>
+            <param name="mediator">The mediator instance used to send queries.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetTimezone.GetTimezoneEndpoint.Configure">
+            <inheritdoc/>
+        </member>
+        <member name="M:AccountManager.API.Accounts.GetTimezone.GetTimezoneEndpoint.HandleAsync(System.Threading.CancellationToken)">
+            <summary>
+            Handles the request to retrieve a list of supported timezones.
+            </summary>
+            <param name="req">The empty request object.</param>
+            <param name="ct">A cancellation token.</param>
+            <returns>A task that represents the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.GetTimezone.GetTimezoneResponse">
+            <summary>
+            Represents the response containing a list of supported timezones.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.GetTimezone.GetTimezoneResponse.Timezones">
+            <summary>
+            Gets or sets the list of supported timezones.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountEndpoint">
+            <summary>
+            Endpoint for linking a sub-account to a head account.
+            </summary>
+            <remarks>
+            This endpoint creates a head–sub account relationship between two existing accounts.
+            It validates that both accounts exist, ensures the sub-account is not already linked,
+            and prevents circular or multi-level hierarchies.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Endpoint for linking a sub-account to a head account.
+            </summary>
+            <remarks>
+            This endpoint creates a head–sub account relationship between two existing accounts.
+            It validates that both accounts exist, ensures the sub-account is not already linked,
+            and prevents circular or multi-level hierarchies.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountEndpoint.Configure">
+            <summary>
+            Configures the HTTP route and behavior for the link sub-account endpoint.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountEndpoint.HandleAsync(AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request to link a sub-account to a head account.
+            </summary>
+            <param name="req">
+            The request containing the sub-account identifier and relationship details.
+            The head account identifier is resolved from the route.
+            </param>
+            <param name="ct">
+            A cancellation token used to propagate notification that the operation should be canceled.
+            </param>
+            <returns>
+            A task representing the asynchronous operation that returns
+            a <see cref="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse"/> upon successful creation.
+            </returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest">
+            <summary>
+            Request payload for creating a head-sub account relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest.HeadAccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that will become the head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest.SubAccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that will become the sub-account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest.RelationshipType">
+            <summary>
+            Gets or sets the type of relationship to create between the head and sub account.
+            </summary>
+            <remarks>
+            Must be set to <c>HEAD_SUB</c>.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest.RequiredPermission">
+            <summary>
+            Gets the permission required to perform this request.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <summary>
+            Gets the account identifier associated with the permission requirement.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequestMapping">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequestMapping"/> class
+            and configures mapping definitions for account linking.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountRequestMapping"/> class
+            and configures mappings related to account relationships.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse">
+            <summary>
+            Represents the response returned after successfully creating
+            a head-sub account relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.RelationshipId">
+            <summary>
+            Gets or sets Unique identifier of the created account relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.SubAccountId">
+            <summary>
+            Gets or sets Unique identifier of the sub-account that was linked.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.HeadAccountId">
+            <summary>
+            Gets or sets Unique identifier of the head account to which the sub-account is linked.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.RelationshipType">
+            <summary>
+            Gets or sets Type of relationship created between the head and sub account.
+            </summary>
+            <remarks>
+            Will always be <c>HEAD_SUB</c> for this endpoint.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.LinkedAt">
+            <summary>
+            Gets or sets UTC timestamp indicating when the relationship was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponse.LinkedBy">
+            <summary>
+            Gets or sets Identifier (usually email or username) of the user who created
+            the relationship.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponseMapping">
+            <summary>
+            AutoMapper profile for mapping link sub-account command responses
+            to API responses.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Link_Sub_Account.LinkSubAccountResponseMapping"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest">
+            <summary>
+            Represents a request to retrieve users associated with an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.AccountId">
+            <summary>
+            Gets or sets the account identifier from the route.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.IsActive">
+            <summary>
+            Gets or sets an optional active-state filter.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.Role">
+            <summary>
+            Gets or sets an optional role filter.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.Page">
+            <summary>
+            Gets or sets the page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.RequiredPermission">
+            <summary>
+            Gets the permission required to perform this request.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <summary>
+            Gets the account identifier associated with the permission requirement.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequestMapping">
+            <summary>
+            AutoMapper profile for account-users API request mapping.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequestMapping"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse">
+            <summary>
+            Represents the paginated account-users response.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse.Users">
+            <summary>
+            Gets or sets the list of users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse.TotalCount">
+            <summary>
+            Gets or sets the total number of matching users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse.Page">
+            <summary>
+            Gets or sets the current page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIResponse.HasMore">
+            <summary>
+            Gets or sets a value indicating whether more pages are available.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersEndpoint">
+            <summary>
+            Endpoint for retrieving users associated with an account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for retrieving users associated with an account.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersEndpoint.Configure">
+            <summary>
+            Configures endpoint metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersEndpoint.HandleAsync(AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersAPIRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request.
+            </summary>
+            <param name="req">The request object.</param>
+            <param name="ct">Cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersResponseMapping">
+            <summary>
+            AutoMapper profile for account-users API response mapping.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.ListAccountUsers.ListAccountUsersResponseMapping"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.StatusTransit.StatusTransitEndpoint">
+            <summary>
+            Endpoint responsible for handling account status transition requests.
+            </summary>
+            <remarks>
+            This endpoint allows changing the status of an existing account by issuing
+            a status transition command through MediatR.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.StatusTransit.StatusTransitEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.StatusTransit.StatusTransitEndpoint"/> class.
+            </summary>
+            <param name="mediator">Mediator used to dispatch commands.</param>
+            <param name="mapper">Mapper used to convert between API models and DTOs.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.StatusTransit.StatusTransitEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, versioning, authorization, and validation.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.StatusTransit.StatusTransitEndpoint.HandleAsync(AccountManager.API.Accounts.Status_Transit.StatusTransitRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the account status transition request.
+            </summary>
+            <param name="request">The status transition request payload.</param>
+            <param name="cancellationToken">Token used to cancel the request.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountValidationException">
+            Thrown when the request fails validation or required conditions are not met.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.InvalidAccountStatusTransitionException">
+            Thrown when the requested status transition is invalid or redundant.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountAlreadyExistsException">
+            Thrown when the transition conflicts with existing account state.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when the account does not exist.
+            </exception>
+            <exception cref="T:System.UnauthorizedAccessException">
+            Thrown when the caller lacks sufficient permissions.
+            </exception>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest">
+            <summary>
+            Represents a request to change the status of an account.
+            Implements <see cref="T:AccountManager.API.Authorization.IRequirePermission"/> to enforce authorization requirements.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account to be updated.
+            </summary>
+            <returns>A <see cref="T:System.Guid"/> representing the account ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.AccountStatus">
+            <summary>
+            Gets or sets the target status of the account.
+            </summary>
+            <returns>A <see cref="T:System.String"/> representing the new account status.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.Reason">
+            <summary>
+            Gets or sets the reason for the account status transition.
+            </summary>
+            <returns>A <see cref="T:System.String"/> describing the reason for the change.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.Version">
+            <summary>
+            Gets or sets the expected version of the account.
+            Used for optimistic concurrency control to ensure updates are applied correctly.
+            </summary>
+            <returns>An <see cref="T:System.Int32"/> representing the account version.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.RequiredPermission">
+            <summary>
+            Gets the permission required to perform the account status update.
+            </summary>
+            <returns>A <see cref="T:System.String"/> representing the required permission key.</returns>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <summary>
+            Gets the account identifier as a string for permission checks.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the account ID.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Status_Transit.StatusTransitRequestMapping">
+            <summary>
+            Defines AutoMapper configuration for mapping
+            <see cref="T:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest"/> to domain DTOs.
+            </summary>
+            <remarks>
+            This mapping is used when handling account status transition requests
+            and converting API-layer models into application-layer data transfer objects.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Status_Transit.StatusTransitRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Status_Transit.StatusTransitRequestMapping"/> class
+            and configures request-to-DTO mappings.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse">
+            <summary>
+            Represents the response returned after an account status transition command has been successfully processed.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.AccountStatus">
+            <summary>
+            Gets or sets the current status of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.StatusChangedAt">
+            <summary>
+            Gets or sets the date and time when the account status was changed.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.StatusChangedBy">
+            <summary>
+            Gets or sets the identifier of the user or system
+            that performed the status change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.Version">
+            <summary>
+            Gets or sets the current version of the account entity.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Status_Transit.StatusTransitResponse.Reason">
+            <summary>
+            Gets or sets the reason for the account status change.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Status_Transit.StatusTransitResponseMapping">
+            <summary>
+            Defines AutoMapper configuration for mapping application command responses
+            to API response models.
+            </summary>
+            <remarks>
+            This mapping is used to convert the result of an account status transition
+            command into a response object returned by the API.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Status_Transit.StatusTransitResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Status_Transit.StatusTransitResponseMapping"/> class
+            and configures response mappings.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Status_Transit.StatusTransitValidator">
+            <summary>
+            Defines validation rules for <see cref="T:AccountManager.API.Accounts.Status_Transit.StatusTransitRequest"/>.
+            </summary>
+            <remarks>
+            Ensures that all required fields for an account status transition
+            request are provided before processing.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Status_Transit.StatusTransitValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Status_Transit.StatusTransitValidator"/> class
+            and configures validation rules for the status transition request.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpoint">
+            <summary>
+            API endpoint for unlinking a sub-account from a head account.
+            Provides request handling, validation, and response mapping.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpoint"/> class.
+            </summary>
+            <param name="mediator">The mediator used to send unlink commands.</param>
+            <param name="mapper">The AutoMapper instance used for DTO conversions.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and summary metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpoint.HandleAsync(AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the unlink request by mapping the request to a DTO,
+            sending the command via mediator, and returning the appropriate response.
+            </summary>
+            <param name="req">The unlink sub-account request payload.</param>
+            <param name="ct">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest">
+            <summary>
+            API request the unlinking of a sub-account
+            from a head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest.HeadAccountId">
+            <summary>
+            Gets or sets the unique identifier of the head account
+            from which the sub-account will be unlinked.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest.SubAccountId">
+            <summary>
+            Gets or sets the unique identifier of the sub-account
+            that is to be unlinked.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest.Reason">
+            <summary>
+            Gets or sets the reason for unlinking the sub-account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse">
+            <summary>
+            Represents the response returned after successfully unlinking a sub-account from a head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse.SubAccountId">
+            <summary>
+            Gets the unique identifier of the sub-account that was unlinked.
+            </summary>
+            <remarks>
+            UUID representing the unlinked sub-account.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse.FormerHeadAccountId">
+            <summary>
+            Gets the unique identifier of the former parent (head) account.
+            </summary>
+            <remarks>
+            UUID representing the previous parent account.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse.UnlinkedAt">
+            <summary>
+            Gets the UTC timestamp indicating when the unlinking occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse.UnlinkedBy">
+            <summary>
+            Gets the unique identifier of the administrator who performed the unlinking.
+            </summary>
+            <remarks>
+            UUID of the admin user responsible for the action.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse.Reason">
+            <summary>
+            Gets the business reason provided for unlinking the sub-account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountRequestMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest"/> and <see cref="T:AccountManager.Domain.DTO.UnlinkSubAccountDto"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountRequestMapping"/> class.
+            Configures the mapping rules for unlinking a sub-account request.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountResponseMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse"/> and <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointResponse"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountResponseMapping"/> class.
+            Configures the mapping rules for unlink sub-account responses.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.UnlinkSubAccountValidator">
+            <summary>
+            Validator for <see cref="T:AccountManager.API.Accounts.Unlink_Sub_Account.UnlinkSubAccountEndpointRequest"/>.
+            Ensures all required properties are provided and valid.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.UnlinkSubAccountValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.UnlinkSubAccountValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Update.UpdateAccountEndpoint">
+            <summary>
+            Endpoint for updating account information.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Update.UpdateAccountEndpoint.#ctor(MediatR.IMediator,AccountManager.Shared.Logging.IApplogger,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for updating account information.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Update.UpdateAccountEndpoint.Configure">
+            <summary>
+            Configures the update account endpoint.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Update.UpdateAccountEndpoint.HandleAsync(AccountManager.API.Accounts.Update.UpdateAccountRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the update account request.
+            </summary>
+            <param name="req">The update account request.</param>
+            <param name="ct">Cancellation token.</param>
+            <returns>Task representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Update.UpdateAccountRequest">
+            <summary>
+            Represents a request to update an account with various account details.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.AccountName">
+            <summary>
+            Gets or sets the account name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.AccountType">
+            <summary>
+            Gets or sets the account type.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.Currency">
+            <summary>
+            Gets or sets the account currency code (e.g., USD, EUR).
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.Timezone">
+            <summary>
+            Gets or sets the time zone identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.Address">
+            <summary>
+            Gets or sets the primary address associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.VatNumber">
+            <summary>
+            Gets or sets the VAT number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.AccountManagerId">
+            <summary>
+            Gets or sets the account manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.CsmId">
+            <summary>
+            Gets or sets the customer success manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.HeadAccountId">
+            <summary>
+            Gets or sets the parent (head) account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.InvoiceEmail">
+            <summary>
+            Gets or sets the email address used for billing communications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.InvoiceType">
+            <summary>
+            Gets or sets the billing type for the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.NotificationEmailAddress">
+            <summary>
+            Gets or sets the email address used for account notifications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountRequest.Version">
+            <summary>
+            Gets or sets the current version of the account entity.
+            Used for optimistic concurrency control.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Update.UpdateAccountRequestMapping">
+            <summary>
+            AutoMapper profile for mapping <see cref="T:AccountManager.Domain.DTO.UpdateAccountDto"/> to <see cref="T:AccountManager.API.Accounts.Update.UpdateAccountRequest"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Update.UpdateAccountRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Update.UpdateAccountRequestMapping"/> class.
+            Configures the mapping between <see cref="T:AccountManager.Domain.DTO.UpdateAccountDto"/> and <see cref="T:AccountManager.API.Accounts.Update.UpdateAccountRequest"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Update.UpdateAccountResponse">
+            <summary>
+            Represents a response to update an account with various account details.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that was updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountResponse.Version">
+            <summary>
+            Gets or sets the current version of the account after the update.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Update.UpdateAccountResponse.UpdatedBy">
+            <summary>
+            Gets or sets the identifier of the user who performed the update.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Update.UpdateAccountResponseMapping">
+            <summary>
+            Defines AutoMapper configuration for mapping account update command responses
+            to API response models.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Update.UpdateAccountResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Update.UpdateAccountResponseMapping"/> class
+            and configures mappings related to account update operations.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.ValidateAccountHierarchyEndpoint">
+            <summary>
+            API endpoint for validating account hierarchy relationships.
+            Accepts a request containing head and sub-account IDs,
+            sends the validation command via MediatR, and returns the validation result.
+            </summary>
+            <param name="mediator">Mediator for sending commands and receiving responses.</param>
+            <param name="mapper">AutoMapper instance for mapping between DTOs and endpoint responses.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ValidateAccountHierarchyEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.ValidateAccountHierarchyEndpoint"/> class.
+            </summary>
+            <param name="mediator">The MediatR mediator used to send commands.</param>
+            <param name="mapper">The AutoMapper instance used for request/response mapping.</param>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ValidateAccountHierarchyEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and summary.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.ValidateAccountHierarchyEndpoint.HandleAsync(AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the account hierarchy validation request by sending a command
+            through MediatR and mapping the result to an API response.
+            </summary>
+            <param name="req">The incoming API request containing head and sub-account IDs.</param>
+            <param name="ct">Token to cancel the operation if needed.</param>
+            <returns>A <see cref="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse"/> containing validation results.</returns>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointRequest">
+            <summary>
+            Represents the request payload for validating an account hierarchy.
+            Used to check whether a given account can be designated as a head account
+            and another as its sub-account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointRequest.HeadAccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that will become the head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointRequest.SubAccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that will become the sub-account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse">
+            <summary>
+            Represents the endpoint response if the account hierarachy has been validated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse.IsValid">
+            <summary>
+            Gets or sets a value indicating whether the hierarchy is valid.
+            True if the hierarchy is valid; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse.ValidationMessages">
+            <summary>
+            Gets or sets the list of validation messages and errors encountered during validation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse.HeadAccountInfo">
+            <summary>
+            Gets or sets the summary information for the head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse.SubAccountInfo">
+            <summary>
+            Gets or sets the summary information for the sub account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyResponseMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            application command responses and API response models
+            related to account hierarchy validation.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyResponseMapping"/> class.
+            Configures the mapping between <see cref="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse"/> and <see cref="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointResponse"/>.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyValidator">
+            <summary>
+            Validator for <see cref="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyEndpointRequest"/>.
+            Ensures that both HeadAccountId and SubAccountId are provided in the request.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Accounts.Validate_Account_Hierarchy.ValidateAccountHierarchyValidator"/> class.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Authorization.IRequirePermission">
+            <summary>
+            Marker interface for requests that require permission validation
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Authorization.IRequirePermission.RequiredPermission">
+            <summary>
+            Gets the permission required to execute this request.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.Authorization.IRequirePermission.AccountId">
+            <summary>
+            Gets The account ID context for the request
+            Optional for Admin users, required for others.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Authorization.PermissionPreProcessor`1">
+            <summary>
+            FastEndpoints pre-processor that validates authentication, user context,
+            and permissions before endpoint execution.
+            </summary>
+            <typeparam name="TRequest">
+            The request type that requires permission validation. Must implement <see cref="T:AccountManager.API.Authorization.IRequirePermission"/>.
+            </typeparam>
+        </member>
+        <member name="M:AccountManager.API.Authorization.PermissionPreProcessor`1.PreProcessAsync(FastEndpoints.IPreProcessorContext{`0},System.Threading.CancellationToken)">
+            <summary>
+            Executes pre-processing logic to validate authentication, user context, and permissions.
+            </summary>
+            <param name="context">The pre-processor context containing the request and HTTP context.</param>
+            <param name="ct">Cancellation token to cancel the operation if needed.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if required services or HttpContext are not properly injected.
+            </exception>
+        </member>
+        <member name="M:AccountManager.API.Authorization.PermissionPreProcessor`1.SendErrorAsync(FastEndpoints.IPreProcessorContext{`0},System.Int32,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Sends a standardized error response to the client.
+            </summary>
+            <param name="context">The pre-processor context containing the HTTP response.</param>
+            <param name="statusCode">The HTTP status code to return.</param>
+            <param name="message">The error message to include in the response.</param>
+            <param name="requiredPermission">The required permission, if applicable.</param>
+            <param name="ct">Cancellation token to cancel the operation if needed.</param>
+        </member>
+        <member name="T:AccountManager.API.ErrorResponses.ApiErrorInfo">
+            <summary>
+            Additional details about the error.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorInfo.ProductId">
+            <summary>
+            Gets or sets the product ID associated with the error.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorInfo.AccountId">
+            <summary>
+            Gets or sets the account ID associated with the error.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorInfo.AdditionalInfo">
+            <summary>
+            Gets or sets additional context information.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.ErrorResponses.ApiErrorResponse">
+            <summary>
+            Standard error response model for API endpoints.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorResponse.Code">
+            <summary>
+            Gets or sets the code.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorResponse.Message">
+            <summary>
+            Gets or sets the error message.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorResponse.Details">
+            <summary>
+            Gets or sets the error details.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorResponse.CorrelationId">
+            <summary>
+            Gets or sets the correlation ID for request tracking.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.ErrorResponses.ApiErrorResponse.TimeStamp">
+            <summary>
+            Gets or sets the timestamp when the error occurred.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.Extensions.HttpContextExtensions">
+            <summary>
+            Provides extension methods for accessing <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> from <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Extensions.HttpContextExtensions.GetUserContext(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Gets the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> stored by the <c>PermissionPreProcessor</c>.
+            </summary>
+            <param name="httpContext">The current HTTP context.</param>
+            <returns>The <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> associated with the request.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown when the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> is not found in <paramref name="httpContext"/>.
+            </exception>
+        </member>
+        <member name="M:AccountManager.API.Extensions.HttpContextExtensions.TryGetUserContext(Microsoft.AspNetCore.Http.HttpContext,AccountManager.Application.Authorization.Models.UserContext@)">
+            <summary>
+            Attempts to retrieve the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> from the <see cref="T:Microsoft.AspNetCore.Http.HttpContext"/>.
+            </summary>
+            <param name="httpContext">The current HTTP context.</param>
+            <param name="userContext">
+            When this method returns, contains the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> if found; otherwise, <c>null</c>.
+            </param>
+            <returns>
+            <c>true</c> if the <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> was successfully retrieved; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:AccountManager.API.Extensions.ServiceRegistrationExtensions">
+            <summary>
+            Provides extension methods for registering application services such as MediatR and AutoMapper.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Extensions.ServiceRegistrationExtensions.AddApplicationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Registers MediatR and AutoMapper profiles for the application.
+            </summary>
+            <param name="services">The service collection to add registrations to.</param>
+            <returns>DI.</returns>
+        </member>
+        <member name="T:AccountManager.API.Middleware.GlobalExceptionMiddleware">
+            <summary>
+            Middleware for handling exceptions globally and returning
+            standardized API error responses.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Middleware.GlobalExceptionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.Middleware.GlobalExceptionMiddleware"/> class.
+            </summary>
+            <param name="next">The next middleware in the pipeline.</param>
+            <param name="appLogger">The application logger.</param>
+        </member>
+        <member name="M:AccountManager.API.Middleware.GlobalExceptionMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Invokes the middleware and handles any unhandled exception.
+            </summary>
+            <param name="context">The current HTTP context.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.API.Middleware.GlobalExceptionMiddleware.BuildApiError(AccountManager.Domain.Exceptions.BaseException)">
+            <summary>
+            Builds a standardized API error from a domain exception.
+            </summary>
+            <param name="exception">The domain exception.</param>
+            <returns>A populated <see cref="T:AccountManager.API.ErrorResponses.ApiErrorResponse"/> instance.</returns>
+        </member>
+        <member name="M:AccountManager.API.Middleware.GlobalExceptionMiddleware.HandleAsync(Microsoft.AspNetCore.Http.HttpContext,System.Exception)">
+            <summary>
+            Handles exceptions and writes standardized error responses.
+            </summary>
+            <param name="context">The HTTP context.</param>
+            <param name="exception">The exception that occurred.</param>
+        </member>
+        <member name="T:AccountManager.API.Middleware.MiddlewareExtensions">
+            <summary>
+            Extension methods for configuring middleware.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.Middleware.MiddlewareExtensions.UseGlobalExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Adds the global exception handling middleware to the application pipeline.
+            </summary>
+            <param name="app">The application builder.</param>
+            <returns>IApplicationBuilder.</returns>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserEndpoint">
+            <summary>
+            API endpoint for adding a new user to an account.
+            Handles incoming requests, maps them to domain DTOs,
+            executes the <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommand"/>, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            API endpoint for adding a new user to an account.
+            Handles incoming requests, maps them to domain DTOs,
+            executes the <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommand"/>, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserEndpoint.HandleAsync(AccountManager.API.User.Add_User.AddUserEndpointRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the incoming request to add a user.
+            Maps the request to a DTO, sends the command via MediatR,
+            and returns the created user information in the response.
+            </summary>
+            <param name="req">The request containing user details.</param>
+            <param name="ct">The cancellation token.</param>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserEndpointRequest">
+            <summary>
+            Represents a request to add a new user to an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account to which the user belongs.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.EmailAddress">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.FirstName">
+            <summary>
+            Gets or sets the first name of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.LastName">
+            <summary>
+            Gets or sets the last name of the user. This field is optional.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.UserType">
+            <summary>
+            Gets or sets the type of user, such as Admin or Standard.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointRequest.Roles">
+            <summary>
+            Gets or sets the list of roles assigned to the user.
+            Defaults to an empty list.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserEndpointRequestMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            <see cref="T:AccountManager.API.User.Add_User.AddUserEndpointRequest"/> and <see cref="T:AccountManager.Domain.DTO.AddUserDto"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserEndpointRequestMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.User.Add_User.AddUserEndpointRequestMapping"/> class.
+            Configures the mapping rules between endpoint request and DTO.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserEndpointResponse">
+            <summary>
+            Represents the response returned after adding a new user via the endpoint.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the newly created user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.FirstName">
+            <summary>
+            Gets or sets the user's first name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.LastName">
+            <summary>
+            Gets or sets the user's last name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.Roles">
+            <summary>
+            Gets or sets the roles assigned to the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.ClerkUserId">
+            <summary>
+            Gets or sets the user identifier from the Clerk authentication system.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user is active.
+            </summary>
+            <remarks>
+            The initial state of a newly created user is <c>true</c>.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.API.User.Add_User.AddUserEndpointResponse.CreatedAt">
+            <summary>
+            Gets or sets the UTC timestamp when the user was created.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserEndpointResponseMapping">
+            <summary>
+            Defines the AutoMapper profile for mapping between
+            <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse"/> and <see cref="T:AccountManager.API.User.Add_User.AddUserEndpointResponse"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserEndpointResponseMapping.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.User.Add_User.AddUserEndpointResponseMapping"/> class.
+            Configures the mapping rules between the command response and the API endpoint response.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.Add_User.AddUserValidator">
+            <summary>
+            Validator class for <see cref="T:AccountManager.API.User.Add_User.AddUserEndpointRequest"/>.
+            Ensures that required fields are provided and meet format requirements.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.Add_User.AddUserValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.API.User.Add_User.AddUserValidator"/> class.
+            Defines validation rules for adding a user.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.GetUser.GetUserEndpoint">
+            <summary>
+            API endpoint for retrieving user profile information.
+            Handles incoming requests, executes the query, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.GetUser.GetUserEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            API endpoint for retrieving user profile information.
+            Handles incoming requests, executes the query, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.GetUser.GetUserEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.GetUser.GetUserEndpoint.HandleAsync(AccountManager.API.User.GetUser.GetUserRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the HTTP GET request to retrieve user profile.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.GetUser.GetUserEndpointResponseMapping">
+            <summary>
+            AutoMapper profile for mapping GetUserQueryResponse to GetUserResponse.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.GetUser.GetUserRequest">
+            <summary>
+            Represents the request model for retrieving a user profile.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserRequest.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user to be retrieved.
+            </summary>
+            <returns>
+            A <see cref="T:System.Guid"/> representing the user ID.
+            </returns>
+        </member>
+        <member name="T:AccountManager.API.User.GetUser.GetUserResponse">
+            <summary>
+            Response DTO for the GetUser endpoint.
+            Contains user profile information including roles and permissions.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user.
+            </summary>
+            <returns>A <see cref="T:System.Guid"/> representing the user ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account the user belongs to.
+            </summary>
+            <returns>A <see cref="T:System.Guid"/> representing the account ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's email.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.FirstName">
+            <summary>
+            Gets or sets the first name of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's first name.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.LastName">
+            <summary>
+            Gets or sets the last name of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's last name.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.Roles">
+            <summary>
+            Gets or sets the list of roles assigned to the user.
+            </summary>
+            <returns>A <see cref="T:System.Collections.Generic.List`1"/> of <see cref="T:System.String"/> values representing roles.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.Permissions">
+            <summary>
+            Gets or sets the permissions assigned to the user.
+            </summary>
+            <returns>An <see cref="T:System.Object"/> representing the user's permissions. 
+            Replace with a strongly typed PermissionSet when available.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user is active.
+            </summary>
+            <returns><c>true</c> if the user is active; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.LastLoginAt">
+            <summary>
+            Gets or sets the timestamp of the user's last login.
+            </summary>
+            <returns>A nullable <see cref="T:System.DateTime"/> representing the last login time.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.LoginCount">
+            <summary>
+            Gets or sets the total number of times the user has logged in.
+            </summary>
+            <returns>An <see cref="T:System.Int32"/> representing the login count.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.CreatedAt">
+            <summary>
+            Gets or sets the timestamp when the user account was created.
+            </summary>
+            <returns>A <see cref="T:System.DateTime"/> representing the account creation time.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.GetUser.GetUserResponse.Version">
+            <summary>
+            Gets or sets the version number of the user record.
+            Useful for concurrency checks and optimistic locking.
+            </summary>
+            <returns>An <see cref="T:System.Int32"/> representing the record version.</returns>
+        </member>
+        <member name="T:AccountManager.API.User.UpdateUser.UpdateUserEndpoint">
+            <summary>
+            API endpoint for updating user information.
+            Handles incoming requests, executes the command, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.UpdateUser.UpdateUserEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            API endpoint for updating user information.
+            Handles incoming requests, executes the command, and returns the response.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.UpdateUser.UpdateUserEndpoint.Configure">
+            <summary>
+            Configures the endpoint route, version, and metadata.
+            </summary>
+            <remarks>
+            - Sets the API version to 1.<br/>
+            - Maps the endpoint to <c>PUT /users/{userId}</c>.<br/>
+            - Allows anonymous access (no authentication required).
+            </remarks>
+        </member>
+        <member name="M:AccountManager.API.User.UpdateUser.UpdateUserEndpoint.HandleAsync(AccountManager.API.User.UpdateUser.UpdateUserRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the HTTP PUT request to update user information.
+            </summary>
+            <param name="request">The <see cref="T:AccountManager.API.User.UpdateUser.UpdateUserRequest"/> containing updated user details.</param>
+            <param name="cancellationToken">Token to cancel the operation.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.
+            On success, returns an <see cref="T:AccountManager.API.User.UpdateUser.UpdateUserResponse"/> containing:
+            <list type="bullet">
+            <item><description><c>UserId</c> – The unique identifier of the updated user.</description></item>
+            <item><description><c>Email</c> – The updated email address.</description></item>
+            <item><description><c>UpdatedAt</c> – The timestamp when the update occurred.</description></item>
+            </list>
+            </returns>
+        </member>
+        <member name="T:AccountManager.API.User.UpdateUser.UpdateUserEndpointResponseMapping">
+            <summary>
+            AutoMapper profile for mapping UpdateUserCommandResponse to UpdateUserResponse.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.UpdateUser.UpdateUserRequest">
+            <summary>
+            Request DTO for the UpdateUser endpoint.
+            Contains the information required to update a user's profile.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserRequest.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user to be updated.
+            </summary>
+            <returns>A <see cref="T:System.Guid"/> representing the user ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserRequest.FirstName">
+            <summary>
+            Gets or sets the new first name of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's first name.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserRequest.LastName">
+            <summary>
+            Gets or sets the new last name of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's last name.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserRequest.Email">
+            <summary>
+            Gets or sets the new email address of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's email address.</returns>
+        </member>
+        <member name="T:AccountManager.API.User.UpdateUser.UpdateUserResponse">
+            <summary>
+            Response DTO for the UpdateUser endpoint.
+            Contains information about the updated user record.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the updated user.
+            </summary>
+            <returns>A <see cref="T:System.Guid"/> representing the user ID.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserResponse.Email">
+            <summary>
+            Gets or sets the updated email address of the user.
+            </summary>
+            <returns>A <see cref="T:System.String"/> containing the user's email.</returns>
+        </member>
+        <member name="P:AccountManager.API.User.UpdateUser.UpdateUserResponse.UpdatedAt">
+            <summary>
+            Gets or sets the timestamp when the user record was last updated.
+            </summary>
+            <returns>A <see cref="T:System.DateTime"/> representing the update time in UTC.</returns>
+        </member>
+        <member name="T:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpoint">
+            <summary>
+            Endpoint for changing user activation state between ACTIVE and INACTIVE.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpoint.#ctor(MediatR.IMediator,AutoMapper.IMapper)">
+            <summary>
+            Endpoint for changing user activation state between ACTIVE and INACTIVE.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpoint.Configure">
+            <summary>
+            Configures the endpoint.
+            </summary>
+        </member>
+        <member name="M:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpoint.HandleAsync(AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the user status transition.
+            </summary>
+            <param name="req">Request model.</param>
+            <param name="ct">Cancellation token.</param>
+        </member>
+        <member name="T:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest">
+            <summary>
+            Represents the request payload for transitioning a user's status 
+            between Active and InActive.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user to update.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.TargetStatus">
+            <summary>
+            Gets or sets the target status for the user.
+            Expected values are "Active" or "InActive".
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.Reason">
+            <summary>
+            Gets or sets the business reason for the status change.
+            This provides context for auditing and compliance purposes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.Version">
+            <summary>
+            Gets or sets the current version number for optimistic locking.
+            Used to prevent conflicting updates when multiple requests occur simultaneously.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.RequiredPermission">
+            <summary>
+            Gets the required permission string needed to perform this request.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointRequest.AccountManager#API#Authorization#IRequirePermission#AccountId">
+            <summary>
+            Gets the account identifier associated with the request.
+            Returns null since this request does not operate on a specific account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse">
+            <summary>
+            Represents the response payload for the user status transition endpoint.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user whose status was updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user is now active.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.StatusChangedAt">
+            <summary>
+            Gets or sets the UTC timestamp when the status change occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.StatusChangedBy">
+            <summary>
+            Gets or sets the unique identifier of the user who performed the status change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.Version">
+            <summary>
+            Gets or sets the new version number after the status update.
+            Used for concurrency and tracking changes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.API.User.User_Status_Transit.UserStatusTransitEndpointResponse.Reason">
+            <summary>
+            Gets or sets the recorded reason for the status change.
+            </summary>
+        </member>
+    </members>
+</doc>

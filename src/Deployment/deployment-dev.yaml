@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-manager-service
+  namespace: temporal    # Specify the same namespace here!
+spec:
+  replicas: 3
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: account-manager-service
+  template:
+    metadata:
+      labels:
+        app: account-manager-service
+    spec:
+      containers:
+        - name: account-manager-service
+          image: registry.digitalocean.com/d-ceu-conregistry/dev-account-manager-service:v6.2.3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: temporal-certs
+              mountPath: "/etc/certs"
+              readOnly: true
+      volumes:
+        - name: temporal-certs
+          secret:
+            secretName: temporal-certificates

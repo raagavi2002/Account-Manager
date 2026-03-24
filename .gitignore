@@ -1,0 +1,52 @@
+# -------------------- 🔐 SECURITY (MUST HAVE) --------------------
+
+# App settings (contain secrets)
+appsettings*.json
+appsettings*.yaml
+appsettings*.yml
+
+# Allow only safe templates
+!appsettings.example.json
+!appsettings.sample.json
+
+# Azure Functions local config (contains secrets)
+local.settings.json
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Secrets & credentials
+secrets.json
+*secrets*.json
+*credentials*.json
+*creds*.json
+
+# CI/CD files (may contain tokens)
+.gitlab-ci.yml
+.github/workflows/*.yml
+
+# Certificates & keys
+*.pfx
+*.pem
+*.key
+
+# Logs
+*.log
+
+# -------------------- Optional but Recommended --------------------
+
+# Databases
+*.db
+*.sqlite
+
+# Backup files
+*.bak
+
+# Test results
+TestResults/
+coverage/
+
+# Docker local override
+docker-compose.override.yml

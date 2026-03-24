@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-manager-service
+  namespace: temporal
+spec:
+  selector:
+    app: account-manager-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8081
+  type: LoadBalancer

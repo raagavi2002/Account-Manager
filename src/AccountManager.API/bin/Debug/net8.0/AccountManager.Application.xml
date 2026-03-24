@@ -1,0 +1,2171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AccountManager.Application</name>
+    </assembly>
+    <members>
+        <member name="T:AccountManager.Application.Abstractions.ITransaction">
+            <summary>
+            Represents an abstraction for a database transaction.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Abstractions.ITransaction.IsCompleted">
+            <summary>
+            Gets a value indicating whether the transaction has been completed (committed or rolled back).
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Abstractions.IUnitOfWork">
+            <summary>
+            Represents a unit of work that coordinates repositories and
+            manages transactional boundaries.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Abstractions.IUnitOfWork.Accounts">
+            <summary>
+            Gets the account repository.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Abstractions.IUnitOfWork.Outbox">
+            <summary>
+            Gets the outbox repository used for reliable message publishing.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Abstractions.IUnitOfWork.User">
+            <summary>
+            Gets the user repository.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Abstractions.IUnitOfWork.AccountRelationship">
+            <summary>
+            Gets the account relationship repository.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Persists all changes made within the current unit of work.
+            </summary>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>A task that represents the asynchronous save operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.BeginTransactionAsync(System.Threading.CancellationToken,System.Nullable{System.Data.IsolationLevel})">
+            <summary>
+            Begins a new database transaction.
+            </summary>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <param name="isolationLevel">
+            The optional transaction isolation level.
+            </param>
+            <returns>
+            A task that represents the asynchronous operation.
+            The task result contains the started transaction.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.CommitTransactionAsync(AccountManager.Application.Abstractions.ITransaction,System.Threading.CancellationToken)">
+            <summary>
+            Commits the specified transaction.
+            </summary>
+            <param name="transaction">The transaction to commit.</param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>A task that represents the asynchronous commit operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.RollbackTransactionAsync(AccountManager.Application.Abstractions.ITransaction,System.Threading.CancellationToken)">
+            <summary>
+            Rolls back the specified transaction.
+            </summary>
+            <param name="transaction">The transaction to roll back.</param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>A task that represents the asynchronous rollback operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.ExecuteInTransactionAsync(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+            <summary>
+            Executes the specified action within a transaction.
+            </summary>
+            <param name="action">
+            The action to execute within the transaction.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>A task that represents the asynchronous execution.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.IUnitOfWork.ExecuteInTransactionAsync``1(System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task{``0}},System.Threading.CancellationToken)">
+            <summary>
+            Executes the specified function within a transaction and returns a result.
+            </summary>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="func">
+            The function to execute within the transaction.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while waiting for the operation to complete.
+            </param>
+            <returns>
+            A task that represents the asynchronous execution.
+            The task result contains the function result.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Abstractions.Messaging.IOutboxRepository">
+            <summary>
+            Defines a repository contract for managing Kafka-produced events
+            using the outbox pattern.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.Messaging.IOutboxRepository.GetPendingKafkaProducedEvents(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a batch of pending Kafka-produced events that are ready for processing.
+            </summary>
+            <param name="maxEvents">The maximum number of events to retrieve.</param>
+            <param name="cancellationToken">A token to observe while waiting for the operation to complete.</param>
+            <returns>
+            A read-only list of pending <see cref="T:AccountManager.Domain.DTO.KafkaProducedEventDto"/> instances.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.Messaging.IOutboxRepository.MarkAsProcessedAsync(System.Collections.Generic.List{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Marks the specified Kafka-produced events as successfully processed.
+            </summary>
+            <param name="eventIds">The identifiers of the events to mark as processed.</param>
+            <param name="cancellationToken">A token to observe while waiting for the operation to complete.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.Messaging.IOutboxRepository.MarkAsDeadLetterBatchAsync(System.Collections.Generic.List{System.Int64},System.Threading.CancellationToken)">
+            <summary>
+            Marks the specified Kafka-produced events as dead-lettered in a batch operation.
+            </summary>
+            <param name="eventIds">The identifiers of the events to mark as dead-lettered.</param>
+            <param name="cancellationToken">A token to observe while waiting for the operation to complete.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.Messaging.IOutboxRepository.IncrementRetryAsync(System.Int64,System.Threading.CancellationToken)">
+            <summary>
+            Increments the retry count for the specified Kafka-produced event.
+            </summary>
+            <param name="eventId">The identifier of the event whose retry count should be incremented.</param>
+            <param name="cancellationToken">A token to observe while waiting for the operation to complete.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Abstractions.Messaging.IOutboxRepository.AddKafkaProducedEventAsync(AccountManager.Domain.DTO.KafkaProducedEventDto,System.Threading.CancellationToken)">
+            <summary>
+            Adds a new Kafka-produced event to the outbox for later processing.
+            </summary>
+            <param name="kafkaProducedEvent">The Kafka-produced event data to persist.</param>
+            <param name="cancellationToken">A token to observe while waiting for the operation to complete.</param>
+            <returns>representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Interfaces.IEventPublisher">
+            <summary>
+            Defines an abstraction for publishing domain events
+            to an external messaging or eventing infrastructure.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Interfaces.IEventPublisher.PublishToAccountEventTopicAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Publishes a raw message to a specified Kafka topic.
+            Used by the outbox worker to replay stored messages.
+            </summary>
+            <param name="key">The message key for partitioning.</param>
+            <param name="payload">The serialized JSON payload.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the async operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Interfaces.IEventPublisher.PublishToDeadLetterQueueTopicAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Publishes a raw message to a specified Kafka topic.
+            Used by the outbox worker to replay stored messages.
+            </summary>
+            <param name="key">The message key for partitioning.</param>
+            <param name="payload">The serialized JSON payload.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task representing the async operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Interfaces.IEventPublisher.PublishToDeadLetterQueueTopicAsync(System.Collections.Generic.IReadOnlyCollection{System.ValueTuple{System.String,System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Publishes multiple messages to the dead-letter queue Kafka topic.
+            </summary>
+            <param name="messages">
+            A collection of messages where each item contains a message key
+            and a JSON-serialized payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while publishing the messages.
+            </param>
+            <returns>
+            A task that represents the asynchronous batch publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Application.Interfaces.IEventPublisher.PublishToAccountEventTopicAsync(System.Collections.Generic.IReadOnlyCollection{System.ValueTuple{System.String,System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Publishes multiple messages to the account events Kafka topic.
+            </summary>
+            <param name="messages">
+            A collection of messages where each item contains a message key
+            and a JSON-serialized payload.
+            </param>
+            <param name="cancellationToken">
+            A token to observe while publishing the messages.
+            </param>
+            <returns>
+            A task that represents the asynchronous batch publish operation.
+            </returns>
+            <exception cref="T:System.ObjectDisposedException">
+            Thrown if the publisher has already been disposed.
+            </exception>
+            <remarks>
+            Messages are produced sequentially to preserve ordering within
+            the scope of this call.
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Interfaces.IFieldPermissionValidator">
+            <summary>
+            Validates field-level permissions for update operations.
+            Per SBR-ACM-010: "Field-Level Update Validation: For update operations, 
+            verify permission for each specific field being changed".
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IFieldPermissionValidator.ValidateFieldUpdatesAsync``1(AccountManager.Application.Authorization.Models.UserContext,``0,``0,System.Threading.CancellationToken)">
+            <summary>
+            Validates permissions for all fields being updated.
+            Compares original vs updated object and checks permission for each changed field.
+            </summary>
+            <typeparam name="T">The type of object being validated.</typeparam>
+            <param name="userContext">The user context containing identity and permissions.</param>
+            <param name="original">The original object before update.</param>
+            <param name="updated">The updated object after changes.</param>
+            <param name="cancellationToken">Optional cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Authorization.Models.FieldValidationResult"/> containing:
+            - Success/failure of validation
+            - List of fields validated
+            - Any permission errors encountered.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IFieldPermissionValidator.GetRequiredPermissionForField(System.String)">
+            <summary>
+            Gets the required permission for a specific field.
+            </summary>
+            <param name="fieldName">The name of the field.</param>
+            <returns>
+            The permission string required to update the field, or <c>null</c> if no permission is required.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IFieldPermissionValidator.ValidateSingleFieldAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates a single field update.
+            </summary>
+            <param name="userContext">The user context containing identity and permissions.</param>
+            <param name="fieldName">The name of the field being updated.</param>
+            <param name="cancellationToken">Optional cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.FieldPermissionResult"/> indicating:
+            - Whether the user has permission for the field
+            - The required permission (if any)
+            - Error details if validation fails.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator">
+            <summary>
+            Provides functionality to calculate and evaluate effective permissions for a user
+            by combining role-based permissions with user-specific overrides.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator.ComputeEffectivePermissionsAsync(AccountManager.Application.Authorization.Models.UserContext,System.Threading.CancellationToken)">
+            <summary>
+            Computes all effective permissions for a user within a given account context.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A set of permission identifiers representing the user's effective permissions.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator.GetRolePermissions(AccountManager.Domain.Enums.UserRoleType)">
+            <summary>
+            Retrieves the base permissions associated with a specific role.
+            </summary>
+            <param name="role">
+            The role for which to retrieve base permissions.
+            </param>
+            <returns>
+            A set of permission identifiers granted by the specified role.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator.HasPermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Determines whether a specific permission is granted to the user.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="permission">
+            The permission identifier to check.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            <c>true</c> if the permission is granted; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator.GetPermissionSourceAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets the source from which a specific permission is granted.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="permission">
+            The permission identifier to evaluate.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Enums.PermissionSource"/> value indicating whether the permission
+            originates from a role, a user override, or both.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionCalculator.Validate(System.Collections.Generic.List{AccountManager.Domain.Enums.UserRoleType},System.Nullable{System.Guid})">
+            <summary>
+            Validates whether the supplied <paramref name="roles"/> form a legal combination
+            under business rule EBR-ACM-004.
+            </summary>
+            <param name="roles">
+            The role values to validate (IN-01). Must not be <c>null</c>.
+            </param>
+            <param name="userId">
+            Optional user identifier for contextual messages during update scenarios (IN-02).
+            Has no effect on rule enforcement.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.RoleValidationResult"/> with <see cref="P:AccountManager.Domain.Results.RoleValidationResult.IsValid"/>,
+            <see cref="P:AccountManager.Domain.Results.RoleValidationResult.ValidationMessages"/>, and
+            <see cref="P:AccountManager.Domain.Results.RoleValidationResult.AllowedCombinations"/> populated.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="roles"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Interfaces.IPermissionResolver">
+            <summary>
+            Resolves user-related authorization data from authentication information
+            and builds a complete permission context for downstream authorization checks.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionResolver.ResolveUserContextAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Resolves and builds a <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> for an authenticated user.
+            </summary>
+            <param name="userId">
+            The unique identifier of the authenticated user.
+            </param>
+            <param name="accountId">
+            The optional account identifier to scope the user context.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A fully populated <see cref="T:AccountManager.Application.Authorization.Models.UserContext"/> containing roles,
+            account assignments, and permission-related data.
+            </returns>
+            <remarks>
+            Implementations typically fetch role assignments, account mappings,
+            and user-specific overrides from persistent storage.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionResolver.ValidateContextAsync(AccountManager.Application.Authorization.Models.UserContext,System.Threading.CancellationToken)">
+            <summary>
+            Validates that the resolved user context is valid for the requested operation.
+            </summary>
+            <param name="userContext">
+            The user context to validate.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            <c>true</c> if the user context is valid; otherwise, <c>false</c>.
+            </returns>
+            <remarks>
+            Validation may include:
+            <list type="bullet">
+            <item>
+            <description>
+            Ensuring invalid role combinations are not present
+            (for example, internal roles cannot be combined).
+            </description>
+            </item>
+            <item>
+            <description>
+            Verifying account access rules, such as clients accessing only their own
+            accounts and internal users accessing only assigned accounts.
+            </description>
+            </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Interfaces.IPermissionValidator">
+            <summary>
+            Provides methods to validate user permissions and make authorization decisions
+            for protected actions and resources.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionValidator.ValidatePermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates whether the user has the required permission.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="requiredPermission">
+            The permission identifier required to perform the action.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> describing whether the permission was granted
+            and any relevant authorization details.
+            </returns>
+            <remarks>
+            Implementations are expected to log the authorization decision
+            to the audit log.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionValidator.ValidateAccountAccessAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Validates whether the user is authorized to access a specific account.
+            </summary>
+            <param name="userContext">
+            The context containing user and account-related information.
+            </param>
+            <param name="targetAccountId">
+            The identifier of the account being accessed.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            <c>true</c> if the user is authorized to access the account;
+            otherwise, <c>false</c>.
+            </returns>
+            <remarks>
+            This typically includes validation of account assignments for internal users.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionValidator.ValidateMultiplePermissionsAsync(AccountManager.Application.Authorization.Models.UserContext,System.Collections.Generic.IEnumerable{System.String},System.Threading.CancellationToken)">
+            <summary>
+            Validates multiple permissions in a single operation.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="permissions">
+            A collection of permission identifiers to validate.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A dictionary mapping each permission identifier to its corresponding
+            <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/>.
+            </returns>
+            <remarks>
+            Useful for complex operations that require multiple permissions to be evaluated
+            together.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.IPermissionValidator.EnsurePermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Ensures that the user has the required permission.
+            </summary>
+            <param name="userContext">
+            The context containing user, account, role, and override information.
+            </param>
+            <param name="requiredPermission">
+            The permission identifier required to perform the action.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the asynchronous operation.
+            </param>
+            <returns>
+            A task that completes when the permission check has finished.
+            </returns>
+            <remarks>
+            Implementations should throw an authorization-related exception
+            if the permission is denied. Use this method when failing fast is desired.
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache">
+            <summary>
+            Manages caching of computed permissions for the duration of a user session.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache.GetOrCalculateEffectivePermissionsAsync(AccountManager.Application.Authorization.Models.UserContext,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves effective permissions for the provided session from cache when possible;
+            otherwise computes them and stores the result.
+            </summary>
+            <param name="userContext">User context that contains roles and optional session information.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>Effective permission identifiers.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache.InvalidateSessionAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Invalidates cached permissions for a specific session.
+            </summary>
+            <param name="sessionId">The session identifier.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Interfaces.ISessionPermissionCache.InvalidateUserAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Invalidates all cached session permissions for the given user.
+            </summary>
+            <param name="userId">The user identifier.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Models.FieldValidationResult">
+            <summary>
+            Consolidated result for field validation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.FieldValidationResult.IsValid">
+            <summary>
+            Gets a value indicating whether all field-level permission checks were successful.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.FieldValidationResult.FieldResults">
+            <summary>
+            Gets the collection of individual field permission evaluation results.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.FieldValidationResult.DeniedFields">
+            <summary>
+            Gets the list of field names for which permission was denied.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.FieldValidationResult.GetErrorMessage">
+            <summary>
+            Builds a human-readable error message describing the missing permissions.
+            </summary>
+            <returns>
+            An error message listing missing required permissions,
+            or an empty string if all permissions are granted.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.FieldValidationResult.GetFieldErrors">
+            <summary>
+            Gets a dictionary of field-level validation errors keyed by field name.
+            </summary>
+            <returns>
+            A dictionary where the key is the field name and the value is the denial reason.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Models.PermissionResult">
+            <summary>
+            Represents the outcome of a permission evaluation operation.
+            </summary>
+            <remarks>
+            A permission result indicates whether a specific permission was granted,
+            the source from which it was granted, and an optional reason when denied.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.PermissionResult.IsGranted">
+            <summary>
+            Gets a value indicating whether the permission was granted.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.PermissionResult.Permission">
+            <summary>
+            Gets the permission key that was evaluated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.PermissionResult.DenialReason">
+            <summary>
+            Gets the reason the permission was denied, if applicable.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.PermissionResult.Source">
+            <summary>
+            Gets the source from which the permission was granted.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.PermissionResult.Granted(System.String,AccountManager.Domain.Enums.PermissionSource)">
+            <summary>
+            Creates a <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> representing a granted permission.
+            </summary>
+            <param name="permission">The permission key that was granted.</param>
+            <param name="source">The source from which the permission was granted.</param>
+            <returns>A granted <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> instance.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.PermissionResult.Denied(System.String,System.String)">
+            <summary>
+            Creates a <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> representing a denied permission.
+            </summary>
+            <param name="permission">The permission key that was evaluated.</param>
+            <param name="reason">The reason the permission was denied.</param>
+            <returns>A denied <see cref="T:AccountManager.Application.Authorization.Models.PermissionResult"/> instance.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Models.UserContext">
+            <summary>
+            Represents the authenticated user's contextual information used for authorization
+            and permission evaluation within the application layer.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.UserId">
+            <summary>
+            Gets the unique identifier of the authenticated user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.AccountId">
+            <summary>
+            Gets the account identifier that represents the current authorization context.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.Roles">
+            <summary>
+            Gets the set of roles assigned to the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.AssignedAccountIds">
+            <summary>
+            Gets the list of account identifiers the user is explicitly assigned to.
+            Used to validate access for internal users such as Account Managers and CSMs.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.SessionId">
+            <summary>
+            Gets or sets the current session identifier used for session-scoped caching.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.IsInternal">
+            <summary>
+            Gets a value indicating whether the user has any internal role
+            (Admin, Account Manager, or CSM).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.IsClient">
+            <summary>
+            Gets a value indicating whether the user has any client role
+            (Main Client, Invoicing Client, or Operations Client).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserContext.IsAdmin">
+            <summary>
+            Gets a value indicating whether the user is an administrator.
+            Administrators have access to all accounts.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.UserContext.HasValidRoleCombination">
+            <summary>
+            Validates that internal roles are not combined
+            Per SBR-ACM-010: "Internal Roles Exclusive: Admin, Account Manager, and CSM cannot be combined"
+            </summary>
+            <returns>flag representing whether it has valid role combination.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.Models.UserContext.CanAccessAccount(System.String)">
+            <summary>
+            Checks if user has access to a specific account.
+            </summary>
+            <param name="targetAccountId">The account ID to check access for.</param>
+            <returns>flag representing whether it can access account.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.Models.UserPermissionOverride">
+            <summary>
+            Represents a user-specific permission override applied within an account context.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.UserId">
+            <summary>
+            Gets the unique identifier of the user to whom the permission override applies.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.AccountId">
+            <summary>
+            Gets the account identifier for which the permission override is granted.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.Permission">
+            <summary>
+            Gets the permission key that is being granted to the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.GrantedAt">
+            <summary>
+            Gets the date and time when the permission override was granted.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.GrantedBy">
+            <summary>
+            Gets the identifier of the user or system that granted the permission override.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Authorization.Models.UserPermissionOverride.Reason">
+            <summary>
+            Gets an optional reason or justification for granting the permission override.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Authorization.PermissionCalculator">
+            <summary>
+            Calculates effective permissions for a user by combining role-based permissions
+            and user-specific permission overrides.
+            </summary>
+            <remarks>
+            This implementation currently derives permissions from user roles only.
+            Support for user-specific overrides can be enabled by wiring the
+            permission override repository.
+            </remarks>
+        </member>
+        <member name="F:AccountManager.Application.Authorization.PermissionCalculator.InternalRoles">
+            <summary>
+            Internal roles. Mutually exclusive with <see cref="F:AccountManager.Application.Authorization.PermissionCalculator.ClientRoles"/>.
+            <see cref="F:AccountManager.Domain.Enums.UserRoleType.Admin"/> is additionally exclusive with every other role.
+            </summary>
+        </member>
+        <member name="F:AccountManager.Application.Authorization.PermissionCalculator.ClientRoles">
+            <summary>
+            Client roles. Mutually exclusive with <see cref="F:AccountManager.Application.Authorization.PermissionCalculator.InternalRoles"/>.
+            <see cref="F:AccountManager.Domain.Enums.UserRoleType.MainClient"/> is additionally exclusive with other client roles.
+            </summary>
+        </member>
+        <member name="F:AccountManager.Application.Authorization.PermissionCalculator.SuggestedCombinations">
+            <summary>
+            Concrete valid combinations surfaced to the caller when validation fails (OUT-03).
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.#ctor(AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Authorization.PermissionCalculator"/> class.
+            </summary>
+            <param name="logger">
+            The application logger used to log permission calculation details.
+            </param>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.Validate(System.Collections.Generic.List{AccountManager.Domain.Enums.UserRoleType},System.Nullable{System.Guid})">
+            <summary>
+            Validates whether the supplied <paramref name="roles"/> form a legal combination
+            under business rule EBR-ACM-004.
+            </summary>
+            <param name="roles">
+            The role values to validate (IN-01). Must not be <c>null</c>.
+            </param>
+            <param name="userId">
+            Optional user identifier for contextual messages during update scenarios (IN-02).
+            Has no effect on rule enforcement.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Domain.Results.RoleValidationResult"/> with <see cref="P:AccountManager.Domain.Results.RoleValidationResult.IsValid"/>,
+            <see cref="P:AccountManager.Domain.Results.RoleValidationResult.ValidationMessages"/>, and
+            <see cref="P:AccountManager.Domain.Results.RoleValidationResult.AllowedCombinations"/> populated.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when <paramref name="roles"/> is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.ComputeEffectivePermissionsAsync(AccountManager.Application.Authorization.Models.UserContext,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.ComputeEffectivePermissionsAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.HasPermissionAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetPermissionSourceAsync(AccountManager.Application.Authorization.Models.UserContext,System.String,System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetRolePermissions(AccountManager.Domain.Enums.UserRoleType)">
+            <summary>
+            Gets the base permissions associated with a specific user role.
+            </summary>
+            <param name="role">
+            The role for which to retrieve permissions.
+            </param>
+            <returns>
+            A set of permission identifiers granted by the specified role.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetAdminPermissions">
+            <summary>
+            Gets the full set of administrative permissions.
+            </summary>
+            <returns>
+            A set of permission identifiers granted to administrators.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetAccountManagerPermissions">
+            <summary>
+            Gets permissions for the Account Manager role.
+            </summary>
+            <remarks>
+            Account Managers have the same permissions as Administrators,
+            but access is restricted to assigned accounts and enforced
+            by the validation layer.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetCSMPermissions">
+            <summary>
+            Gets permissions for the Customer Success Manager (CSM) role.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetMainClientPermissions">
+            <summary>
+            Gets permissions for the Main Client role.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetInvoicingClientPermissions">
+            <summary>
+            Gets permissions for the Invoicing Client role.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.GetOperationsClientPermissions">
+            <summary>
+            Gets permissions for the Operations Client role.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Authorization.PermissionCalculator.Fail(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Builds a failed <see cref="T:AccountManager.Domain.Results.RoleValidationResult"/> from a single hard-stop message.
+            Used for structural errors (E-01, E-02) that prevent further rule evaluation.
+            </summary>
+            <param name="message">The error message to include.</param>
+            <returns>A <see cref="T:AccountManager.Domain.Results.RoleValidationResult"/> with <c>IsValid = false</c>.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommand">
+            <summary>
+            Represents a command to transition an account from one status to another.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommand.AccountStatusTransitInfo">
+            <summary>
+            Gets or sets the account status transition information including the target status and related data.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommand"/> by validating business rules
+            and transitioning an account to the requested status.
+            </summary>
+            <remarks>
+            This handler enforces domain constraints such as required account data,
+            valid status transitions, and user-role requirements before persisting changes.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository,AccountManager.Domain.Interfaces.IUserRepository,AccountManager.Application.Abstractions.IUnitOfWork,AccountManager.Domain.Interfaces.IDomainEventFactory)">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommand"/> by validating business rules
+            and transitioning an account to the requested status.
+            </summary>
+            <remarks>
+            This handler enforces domain constraints such as required account data,
+            valid status transitions, and user-role requirements before persisting changes.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandHandler.Handle(AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the account status transition request.
+            </summary>
+            <param name="request">
+            The command containing the account identifier, target status,
+            and the reason for the status transition.
+            </param>
+            <param name="cancellationToken">
+            A token used to cancel the operation if requested.
+            </param>
+            <returns>
+            An <see cref="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse"/> describing the
+            completed status transition.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when the account does not exist or required account data is missing.
+            </exception>
+            <exception cref="T:System.Exception">
+            Thrown when one or more business validation rules are violated, such as
+            attempting to update to the same status or missing required information.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse">
+            <summary>
+            Represents the response returned after an account status
+            transition command has been successfully processed.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.AccountStatus">
+            <summary>
+            Gets or sets the current status of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.StatusChangedAt">
+            <summary>
+            Gets or sets the date and time when the account status was changed.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.StatusChangedBy">
+            <summary>
+            Gets or sets the identifier of the user or system
+            that performed the status change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.Version">
+            <summary>
+            Gets or sets the current version of the account entity.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandResponse.Reason">
+            <summary>
+            Gets or sets the reason for the account status change.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommand">
+            <summary>
+            Command to add a new user to an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommand.AddUser">
+            <summary>
+            Gets or sets the data required to add a new user.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommandHandler">
+            <summary>
+            Handles the AddUserCommand and returns an AddUserCommandResponse.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.AddUserCommand.AddUserCommandHandler.#ctor(AccountManager.Domain.Interfaces.IDomainEventFactory,AccountManager.Application.Abstractions.IUnitOfWork,AccountManager.Shared.Logging.IApplogger,AccountManager.Application.Authorization.Interfaces.IPermissionCalculator)">
+            <summary>
+            Handles the AddUserCommand and returns an AddUserCommandResponse.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.AddUserCommand.AddUserCommandHandler.Handle(AccountManager.Application.Commands.AddUserCommand.AddUserCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the AddUserCommand request.
+            </summary>
+            <param name="request">The AddUserCommand request.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>An AddUserCommandResponse.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse">
+            <summary>
+            Response returned after successfully adding a new user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the newly created user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.FirstName">
+            <summary>
+            Gets or sets the user's first name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.LastName">
+            <summary>
+            Gets or sets the user's last name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.Roles">
+            <summary>
+            Gets or sets the roles assigned to the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.ClerkUserId">
+            <summary>
+            Gets or sets the user identifier from the Clerk authentication system.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user is active.
+            </summary>
+            <remarks>
+            The initial state of a newly created user is <c>true</c>.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse.CreatedAt">
+            <summary>
+            Gets or sets the UTC timestamp when the user was created.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommand">
+            <summary>
+            Command to request the archival of an account.
+            Wraps the <see cref="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommand.ArchiveAccountDto"/> and is handled via MediatR.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommand.ArchiveAccountDto">
+            <summary>
+            Gets or sets the data transfer object containing
+            the details of the account archival request.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommand"/> request by archiving an account,
+            updating its status, anonymizing user data, and publishing domain events.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository,AccountManager.Domain.Interfaces.IAccountRelationshipRepository,AccountManager.Application.Abstractions.Messaging.IOutboxRepository,AccountManager.Domain.Interfaces.IDomainEventFactory,AccountManager.Shared.Logging.IApplogger,AccountManager.Application.Abstractions.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandHandler"/> class.
+            </summary>
+            <param name="accountRepository">Repository for account data operations.</param>
+            <param name="accountRelationshipRepository">Repository for account relationship operations.</param>
+            <param name="outboxRepository">Repository for persisting outbox events.</param>
+            <param name="domainEventFactory">Factory for creating domain events.</param>
+            <param name="applogger">Application logger for logging operations.</param>
+            <param name="unitOfWork">Unit of work for transactional consistency.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandHandler.Handle(AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the archive account command by validating account existence,
+            checking archival status, updating account details, and publishing events.
+            </summary>
+            <param name="request">The archive account command request.</param>
+            <param name="cancellationToken">Token to cancel the operation.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse"/> containing the archival result and metadata.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountNotFoundException">
+            Thrown when the account does not exist.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountAlreadyArchivedException">
+            Thrown when the account is already archived.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse">
+            <summary>
+            Represents the response returned after executing an archive account command.
+            Contains details about the account and its archival status.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.IsArchived">
+            <summary>
+            Gets or sets a value indicating whether the account has been archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.ArchivedAt">
+            <summary>
+            Gets or sets the date and time when the account was archived.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.ArchivedBy">
+            <summary>
+            Gets or sets the identifier (e.g., username or system actor) of the entity that archived the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.IsGDPRComplaint">
+            <summary>
+            Gets or sets a value indicating whether the archival process is compliant with GDPR regulations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ArchiveAccountCommand.ArchiveAccountCommandResponse.Reason">
+            <summary>
+            Gets or sets the reason why the account has been archived.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommand">
+            <summary>
+            Command used to request the creation of a new account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommand.Account">
+            <summary>
+            Gets or sets the account data required to create a new account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandHandler">
+            <summary>
+            Handles the creation of accounts by processing <see cref="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommand"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandHandler.#ctor(AccountManager.Domain.Interfaces.IDomainEventFactory,AccountManager.Application.Abstractions.IUnitOfWork,MediatR.IMediator)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandHandler"/> class.
+            </summary>
+            <param name="domainEventFactory">The domain event factory.</param>
+            <param name="unitOfWork">The unit of work.</param>
+            <param name="mediator">The mediator.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandHandler.Handle(AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the create account command.
+            </summary>
+            <param name="request">The create account command request.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>The response containing account details.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse">
+            <summary>
+            Represents the response returned after successfully creating an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the created account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.AccountName">
+            <summary>
+            Gets or sets the name of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.AccountType">
+            <summary>
+            Gets or sets the type of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.AccountStatus">
+            <summary>
+            Gets or sets the current status of the account.
+            </summary>
+            <remarks>
+            Examples include Active, Inactive, or Pending.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.Currency">
+            <summary>
+            Gets or sets the currency associated with the account.
+            </summary>
+            <remarks>
+            Expected to be an ISO 4217 currency code (e.g. EUR, USD).
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.Timezone">
+            <summary>
+            Gets or sets the timezone associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.Version">
+            <summary>
+            Gets or sets the current version of the account record.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the account was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand">
+            <summary>
+            Command to create a new audit log entry.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.EntityType">
+            <summary>
+            Gets or sets the type of entity being audited.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.EntityId">
+            <summary>
+            Gets or sets the unique identifier of the entity being audited.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.OperationType">
+            <summary>
+            Gets or sets the type of operation performed on the entity.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.UserId">
+            <summary>
+            Gets or sets the identifier of the user who performed the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.BeforeState">
+            <summary>
+            Gets or sets the serialized state of the entity before the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.AfterState">
+            <summary>
+            Gets or sets the serialized state of the entity after the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.ChangedFields">
+            <summary>
+            Gets or sets the fields that were changed during the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.Reason">
+            <summary>
+            Gets or sets the reason provided for the operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.RelatedEntityId">
+            <summary>
+            Gets or sets the identifier of a related entity, if applicable.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.Outcome">
+            <summary>
+            Gets or sets the outcome of the operation. Defaults to <see cref="F:AccountManager.Domain.Enums.AuditLog.AuditOutcome.Success"/>.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.Metadata">
+            <summary>
+            Gets or sets additional metadata associated with the audit entry.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand.CorrelationId">
+            <summary>
+            Gets or sets the correlation identifier used to link related operations.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommandHandler">
+            <summary>
+            Handles the creation of audit log entries.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommandHandler.#ctor(AccountManager.Domain.Interfaces.IAuditLogRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommandHandler"/> class.
+            </summary>
+            <param name="auditLogRepository">The repository used to persist audit log entries.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommandHandler.Handle(AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.CreateAuditEntryCommand.CreateAuditEntryCommand"/> request by creating and persisting
+            a new audit log entry.
+            </summary>
+            <param name="request">The command containing details of the audit entry to be created.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>
+            A task representing the asynchronous operation, with the unique identifier of the created audit log entry.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown when the audit log entry does not satisfy required invariants.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand">
+            <summary>
+            Represents a command to link a sub-account to a head account.
+            </summary>
+            <remarks>
+            This command is handled by the application layer to establish a
+            head–sub account relationship between two existing accounts.
+            The relationship details are provided via a
+            <see cref="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand.LinkSubAccountDto"/> instance.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand.LinkSubAccountDto">
+            <summary>
+            Gets or sets the data transfer object containing
+            information required to link a sub-account to a head account.
+            </summary>
+            <remarks>
+            This DTO includes identifiers for both the head account and
+            the sub-account, as well as the type of relationship to be created.
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand"/> by validating input, linking a sub-account
+            to a head account, persisting the relationship, and producing a domain event.
+            </summary>
+            <remarks>
+            This handler uses the Unit of Work pattern to ensure that all database changes
+            and outbox events are committed atomically. Domain-specific exceptions are logged
+            and rethrown, while unexpected exceptions are wrapped and logged.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandHandler.#ctor(AccountManager.Application.Abstractions.IUnitOfWork,AccountManager.Domain.Interfaces.IDomainEventFactory,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand"/> by validating input, linking a sub-account
+            to a head account, persisting the relationship, and producing a domain event.
+            </summary>
+            <remarks>
+            This handler uses the Unit of Work pattern to ensure that all database changes
+            and outbox events are committed atomically. Domain-specific exceptions are logged
+            and rethrown, while unexpected exceptions are wrapped and logged.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandHandler.Handle(AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request to link a sub-account to a head account.
+            </summary>
+            <param name="request">
+            The command containing the head account ID, sub-account ID, and relationship details.
+            </param>
+            <param name="cancellationToken">
+            A token used to propagate notification that the operation should be canceled.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse"/> containing details of the created account relationship.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountValidationException">
+            Thrown when either the head account or sub-account does not exist.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountAlreadyLinkedException">
+            Thrown when the sub-account is already linked to the specified or another head account.
+            </exception>
+            <exception cref="T:System.Exception">
+            Thrown when an unexpected error occurs during the linking process.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse">
+            <summary>
+            Represents the response returned after successfully creating
+            a head–sub account relationship.
+            </summary>
+            <remarks>
+            This response contains identifiers for the relationship, the
+            head account, and the sub-account, along with audit metadata
+            describing when and by whom the relationship was created.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.RelationshipId">
+            <summary>
+            Gets or sets the unique identifier of the created relationship.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.HeadAccountId">
+            <summary>
+            Gets or sets the unique identifier of the head (parent) account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.SubAccountId">
+            <summary>
+            Gets or sets the unique identifier of the sub (child) account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.RelationshipType">
+            <summary>
+            Gets or sets the type of relationship that was created.
+            </summary>
+            <remarks>
+            For head–sub account links, this value will be <c>HEAD_SUB</c>.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.LinkedAt">
+            <summary>
+            Gets or sets the UTC date and time when the relationship was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandResponse.LinkedBy">
+            <summary>
+            Gets or sets the identifier (such as email or username)
+            of the user who created the relationship.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommand">
+            <summary>
+            Represents a command to unlink a sub-account from a parent account.
+            </summary>
+            <remarks>
+            This command is handled by MediatR and returns an <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse"/>.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommand.UnlinkAccountInfo">
+            <summary>
+            Gets or sets the information required to unlink the sub-account.
+            </summary>
+            <value>
+            A <see cref="T:AccountManager.Domain.DTO.LinkSubAccountDto"/> containing details of the sub-account to be unlinked.
+            </value>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler">
+            <summary>
+            Handles the unlinking of a sub-account from a head account.
+            </summary>
+            <remarks>
+            This command handler validates account existence, ensures a relationship exists,
+            unlinks the sub-account, persists changes, and produces a domain event.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository,AccountManager.Domain.Interfaces.IAccountRelationshipRepository,AccountManager.Domain.Interfaces.IDomainEventFactory,AccountManager.Application.Abstractions.IUnitOfWork)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler"/> class.
+            </summary>
+            <param name="accountRepository">Repository for account-related operations.</param>
+            <param name="accountRelationshipRepository">Repository for account relationship operations.</param>
+            <param name="domainEventFactory">Factory for creating domain events.</param>
+            <param name="unitOfWork">Unit of work for persisting changes.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler.Handle(AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommand"/> request.
+            </summary>
+            <param name="request">The command containing unlinking information.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse"/> containing details of the unlinking operation.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountAlreadyExistsException">
+            Thrown when either the head account or sub-account does not exist.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountRelationshipNotFoundException">
+            Thrown when no existing relationship is found between the head account and sub-account.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse">
+            <summary>
+            Response returned after a sub-account has been unlinked from its parent account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse.SubAccountId">
+            <summary>
+            Gets the unique identifier of the sub-account that was unlinked.
+            </summary>
+            <remarks>
+            UUID representing the unlinked sub-account.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse.FormerHeadAccountId">
+            <summary>
+            Gets the unique identifier of the former parent (head) account.
+            </summary>
+            <remarks>
+            UUID representing the previous parent account.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse.UnlinkedAt">
+            <summary>
+            Gets the UTC timestamp indicating when the unlinking occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse.UnlinkedBy">
+            <summary>
+            Gets the unique identifier of the administrator who performed the unlinking.
+            </summary>
+            <remarks>
+            UUID of the admin user responsible for the action.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandResponse.Reason">
+            <summary>
+            Gets the business reason provided for unlinking the sub-account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommand">
+            <summary>
+            Represents a command used to update an existing account.
+            </summary>
+            <remarks>
+            This command is handled via MediatR and contains the data required
+            to perform an account update operation.
+            </remarks>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommand.UpdateAccountDto">
+            <summary>
+            Gets or sets the data transfer object containing account update information.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommand"/> by executing the account update operation.
+            </summary>
+            <remarks>
+            This handler is responsible for validating the update request,
+            applying business rules, and persisting changes to the underlying data store.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandHandler.Handle(AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the update account command by validating the request, applying business rules, updating the account,
+            and persisting the changes to the data store.
+            </summary>
+            <param name="request">The update account command containing the account update information.</param>
+            <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+            <returns>
+            A <see cref="T:System.Threading.Tasks.Task`1"/> representing the asynchronous operation, with a result of <see cref="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse"/>
+            containing the updated account information.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountValidationException">Thrown when the account data is invalid.</exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.AccountAlreadyExistsException">Thrown when the account name already exists.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when required arguments are missing or invalid.</exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse">
+            <summary>
+            Represents the result of an account update command operation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account that was updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse.Version">
+            <summary>
+            Gets or sets the current version of the account after the update.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandResponse.UpdatedBy">
+            <summary>
+            Gets or sets the identifier of the user who performed the update.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommand"/> and returns an <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandResponse"/>.
+            Includes Kafka event publishing and audit logging.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandHandler.#ctor(AccountManager.Application.Abstractions.IUnitOfWork,AccountManager.Shared.Logging.IApplogger,AccountManager.Domain.Interfaces.IDomainEventFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandHandler"/> class.
+            </summary>
+            <param name="unitOfWork">Provides access to repositories and manages transactions.</param>
+            <param name="applogger">Application logger for audit and diagnostic logging.</param>
+            <param name="domainEventFactory">Factory for creating domain events.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandHandler.Handle(AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the update user command by validating input, updating user details,
+            saving changes, and returning a response.
+            </summary>
+            <param name="request">The <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommand"/> containing user update details.</param>
+            <param name="cancellationToken">Token to cancel the operation.</param>
+            <returns>An <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandResponse"/> containing updated user information.</returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.UserValidationException">
+            Thrown when email, first name, or last name validation fails.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.UserNotFoundException">
+            Thrown when the user with the specified ID does not exist.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand">
+            <summary>
+            Command object representing a request to transition a user's status.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user to update.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand.TargetStatus">
+            <summary>
+            Gets or sets the target status for the user.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand.Reason">
+            <summary>
+            Gets or sets the business reason for the status change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand.Version">
+            <summary>
+            Gets or sets the current version number for optimistic locking.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand"/> request to transition a user's status
+            between <c>Active</c> and <c>InActive</c>.
+            </summary>
+            <remarks>
+            This handler validates the requested status transition, ensures compliance with business rules,
+            and produces domain events for activation or deactivation. The resulting event is persisted
+            to the outbox for Kafka publishing.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandHandler.Handle(AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand,System.Threading.CancellationToken)">
+            <summary>
+            Processes the <see cref="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommand"/> request.
+            </summary>
+            <param name="request">
+            The command containing the target user ID, desired status, and reason for the transition.
+            </param>
+            <param name="cancellationToken">
+            A token to monitor for cancellation requests.
+            </param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse"/> containing the updated status,
+            reason, and metadata about the transition.
+            </returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.UserNotFoundException">
+            Thrown when the specified user cannot be found in the repository.
+            </exception>
+            <exception cref="T:AccountManager.Domain.Exceptions.UserValidationException">
+            Thrown when the target status is invalid, unchanged, or when a reason is not provided.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse">
+            <summary>
+            Represents the response returned after a user status transition operation.
+            Contains details about the user, the new status, and metadata about the change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.UserId">
+            <summary>
+            Gets or sets the unique identifier of the user whose status was updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.IsActive">
+            <summary>
+            Gets or sets a value indicating whether the user is now active.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.StatusChangedAt">
+            <summary>
+            Gets or sets the UTC timestamp when the status change occurred.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.StatusChangedBy">
+            <summary>
+            Gets or sets the unique identifier of the user who performed the status change.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.Version">
+            <summary>
+            Gets or sets the new version number after the status update.
+            Used for concurrency and tracking changes.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.UserStatusTransitCommand.UserStatusTransitCommandResponse.Reason">
+            <summary>
+            Gets or sets the recorded reason for the status change.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommand">
+            <summary>
+            Represents a request to validate the relationship between a head account and a sub account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommand.HeadAccountId">
+            <summary>
+            Gets or sets the unique identifier of the head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommand.SubAccountId">
+            <summary>
+            Gets or sets the unique identifier of the sub account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommandHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommand"/> request by validating
+            the relationship between a head account and a sub account.
+            </summary>
+            <remarks>
+            This handler checks for account existence, ensures that the sub account is not already linked,
+            and returns a <see cref="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse"/> with validation results.
+            </remarks>
+        </member>
+        <member name="M:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommandHandler.#ctor(AccountManager.Application.Abstractions.IUnitOfWork,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommandHandler"/> class.
+            </summary>
+            <param name="unitOfWork">The unit of work providing access to account repositories.</param>
+            <param name="applogger">The application logger for recording validation events.</param>
+        </member>
+        <member name="M:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommandHandler.Handle(AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyCommand,System.Threading.CancellationToken)">
+            <summary>
+            Handles the validation of account hierarchy.
+            </summary>
+            <param name="request">The command containing head and sub account identifiers.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>
+            A <see cref="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse"/> indicating whether the hierarchy is valid,
+            along with validation messages and account details when applicable.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse">
+            <summary>
+            Represents the response returned after validating an account hierarchy.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse.IsValid">
+            <summary>
+            Gets or sets a value indicating whether the hierarchy is valid.
+            True if the hierarchy is valid; otherwise, false.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse.ValidationMessages">
+            <summary>
+            Gets or sets the list of validation messages and errors encountered during validation.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse.HeadAccountInfo">
+            <summary>
+            Gets or sets the summary information for the head account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Commands.ValidateAccountHierarchyCommand.ValidateAccountHierarchyResponse.SubAccountInfo">
+            <summary>
+            Gets or sets the summary information for the sub account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.DependencyInjection">
+            <summary>
+            Provides methods for configuring and managing dependency injection
+            within the AccountManager application.
+            </summary>
+            <remarks>
+            This class is intended to register services, repositories, and other
+            dependencies to the application's IoC container.
+            </remarks>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryRequest"/> query by retrieving account details
+            from the repository and mapping them to a <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryHandler"/> class.
+            </summary>
+            <param name="accountRepository">The account repository used to access account data.</param>
+            <param name="applogger">The application logger used for logging operations.</param>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryHandler.Handle(AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request to retrieve account details by account ID.
+            </summary>
+            <param name="request">The request containing the account ID.</param>
+            <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+            <returns>
+            A task that represents the asynchronous operation. The task result contains
+            the <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse"/> with account details.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryRequest">
+            <summary>
+            Represents a request to retrieve account details by account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryRequest.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse">
+            <summary>
+            Represents the response containing detailed information about an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.AccountId">
+            <summary>
+            Gets or sets the unique identifier of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.AccountName">
+            <summary>
+            Gets or sets the account name.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.AccountType">
+            <summary>
+            Gets or sets the account type.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.Currency">
+            <summary>
+            Gets or sets the account currency code (e.g., USD, EUR).
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.Timezone">
+            <summary>
+            Gets or sets the time zone identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.Address">
+            <summary>
+            Gets or sets the primary address associated with the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.VatNumber">
+            <summary>
+            Gets or sets the VAT number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.AccountManagerId">
+            <summary>
+            Gets or sets the account manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.CsmId">
+            <summary>
+            Gets or sets the customer success manager identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.HeadAccountId">
+            <summary>
+            Gets or sets the parent (head) account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.InvoiceEmailAddress">
+            <summary>
+            Gets or sets the email address used for billing communications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.InvoiceType">
+            <summary>
+            Gets or sets the billing type for the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.NotificationEmailAddress">
+            <summary>
+            Gets or sets the email address used for account notifications.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.AccountStatus">
+            <summary>
+            Gets or sets the status of the account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.Version">
+            <summary>
+            Gets or sets the current version of the account entity.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.IsHeadAccount">
+            <summary>
+            Gets or sets a value indicating whether this account is a head (parent) account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the account was created.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the account was last updated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.ActivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was activated.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse.DeactivatedAt">
+            <summary>
+            Gets or sets the date and time when the account was deactivated.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryHandler">
+            <summary>
+            Handles <see cref="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest"/> queries.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryHandler"/> class.
+            </summary>
+            <param name="accountRepository">The account repository.</param>
+            <param name="applogger">The application logger.</param>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryHandler.Handle(AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest">
+            <summary>
+            Represents a request to retrieve products associated with an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest.AccountId">
+            <summary>
+            Gets or sets the account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest.IsActive">
+            <summary>
+            Gets or sets an optional filter for active/inactive associations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryRequest.PageNumber">
+            <summary>
+            Gets or sets the page number starting from 1.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse">
+            <summary>
+            Represents the paginated response for account-product associations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse.Products">
+            <summary>
+            Gets or sets the product associations.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse.TotalCount">
+            <summary>
+            Gets or sets the total number of matching products.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse.PageNumber">
+            <summary>
+            Gets or sets the current page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryResponse.HasMore">
+            <summary>
+            Gets or sets a value indicating whether more pages are available.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryHandler">
+            <summary>
+            Handles the retrieval of all available timezones.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryHandler.#ctor(AccountManager.Domain.Interfaces.IAccountRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryHandler"/> class.
+            </summary>
+            <param name="accountRepository">The account repository.</param>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryHandler.Handle(AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the request to get all timezones.
+            </summary>
+            <param name="request">The request object.</param>
+            <param name="cancellationToken">A cancellation token.</param>
+            <returns>A response containing the list of timezones.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryRequest">
+            <summary>
+            Represents a request to retrieve the list of supported timezones.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryResponse">
+            <summary>
+            Represents the response containing a list of timezones.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryResponse.Timezones">
+            <summary>
+            Gets or sets the list of timezones.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryHandler">
+            <summary>
+            Handles the <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryRequest"/> and returns a <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/>.
+            Includes permission calculation, audit logging, and Kafka event publishing.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetUserQuery.GetUserQueryHandler.#ctor(AccountManager.Domain.Interfaces.IUserRepository,AccountManager.Application.Authorization.Interfaces.IPermissionCalculator,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryHandler"/> class.
+            </summary>
+            <param name="userRepository">Repository for accessing user data.</param>
+            <param name="permissionCalculator">Service for calculating user permissions.</param>
+            <param name="applogger">Application logger for audit and diagnostic logging (optional).</param>
+        </member>
+        <member name="M:AccountManager.Application.Queries.GetUserQuery.GetUserQueryHandler.Handle(AccountManager.Application.Queries.GetUserQuery.GetUserQueryRequest,System.Threading.CancellationToken)">
+            <summary>
+            Handles the query request by retrieving user details, performing permission checks,
+            and returning a response with user information.
+            </summary>
+            <param name="request">The <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryRequest"/> containing the user ID.</param>
+            <param name="cancellationToken">Token to cancel the operation.</param>
+            <returns>A <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/> containing user details.</returns>
+            <exception cref="T:AccountManager.Domain.Exceptions.UserNotFoundException">
+            Thrown when the user with the specified ID does not exist.
+            </exception>
+        </member>
+        <member name="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryHandler">
+            <summary>
+            Handles <see cref="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest"/> queries.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryHandler.#ctor(AccountManager.Domain.Interfaces.IUserRepository,AccountManager.Shared.Logging.IApplogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryHandler"/> class.
+            </summary>
+            <param name="userRepository">The user repository.</param>
+            <param name="applogger">The application logger.</param>
+        </member>
+        <member name="M:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryHandler.Handle(AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest">
+            <summary>
+            Represents a request to retrieve users associated with an account.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest.AccountId">
+            <summary>
+            Gets or sets the account identifier.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest.IsActive">
+            <summary>
+            Gets or sets an optional filter for active/inactive users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest.Role">
+            <summary>
+            Gets or sets an optional filter for user role.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryRequest.PageNumber">
+            <summary>
+            Gets or sets the page number starting from 1.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse">
+            <summary>
+            Represents the paginated response for account users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse.Users">
+            <summary>
+            Gets or sets the list of users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse.TotalCount">
+            <summary>
+            Gets or sets the total number of matching users.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse.Page">
+            <summary>
+            Gets or sets the current page number.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryResponse.HasMore">
+            <summary>
+            Gets or sets a value indicating whether more pages are available.
+            </summary>
+        </member>
+        <member name="T:AccountManager.Application.Utilities.EnumParser">
+            <summary>
+            Provides helper methods for safely parsing string values into enum types.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Utilities.EnumParser.TryParse``1(System.String,``0@)">
+            <summary>
+            Attempts to parse the specified string into an enum value of type <typeparamref name="TEnum"/>.
+            </summary>
+            <typeparam name="TEnum">
+            The enum type to parse the value into.
+            </typeparam>
+            <param name="value">
+            The string representation of the enum value.
+            </param>
+            <param name="result">
+            When this method returns, contains the parsed enum value if the parsing succeeded;
+            otherwise, the default value of <typeparamref name="TEnum"/>.
+            </param>
+            <returns>
+            <c>true</c> if the value was successfully parsed and represents a defined enum member;
+            otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Utilities.EnumParser.GetEnumMemberValue``1(``0)">
+            <summary>
+            Gets the EnumMember attribute value for an enum constant.
+            Returns the enum name if EnumMember is not present.
+            </summary>
+            <typeparam name="TEnum">
+            The enum type to retrieve the EnumMember value from.
+            </typeparam>
+            <param name="enumValue">
+            The enum value whose EnumMember attribute value is to be retrieved.
+            </param>
+            <returns>
+            The value of the <see cref="T:System.Runtime.Serialization.EnumMemberAttribute"/> if present; otherwise, the enum name.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Utilities.EnumParser.ParseFromEnumMember``1(System.String)">
+            <summary>
+            Parses a string value to an enum value by matching the <see cref="P:System.Runtime.Serialization.EnumMemberAttribute.Value"/>.
+            </summary>
+            <typeparam name="T">
+            The enum type to parse.
+            </typeparam>
+            <param name="value">
+            The string value to match against the <see cref="P:System.Runtime.Serialization.EnumMemberAttribute.Value"/> of the enum fields.
+            </param>
+            <returns>
+            The enum value whose <see cref="P:System.Runtime.Serialization.EnumMemberAttribute.Value"/> matches the provided string.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+            Thrown when the provided value does not match any <see cref="T:System.Runtime.Serialization.EnumMemberAttribute"/> on the enum.
+            </exception>
+        </member>
+        <member name="M:AccountManager.Application.Utilities.EnumParser.IsValidEnumValue``1(System.Int32)">
+            <summary>
+            Validates whether the integer value corresponds to a defined value in the specified enum type.
+            </summary>
+            <typeparam name="TEnum">The enum type to validate against.</typeparam>
+            <param name="value">The integer value to validate.</param>
+            <returns>
+            <c>true</c> if the value is defined in the enum; otherwise, <c>false</c>.
+            </returns>
+            <example>
+            <code>
+            int statusCode = 2;
+            bool isValid = statusCode.IsValidEnumValue&lt;OrderStatus&gt;();
+            // Returns true if OrderStatus has a member with value 2
+            </code>
+            </example>
+        </member>
+        <member name="M:AccountManager.Application.Utilities.EnumParser.TryGetEnum``1(System.Int32,``0@)">
+            <summary>
+            Attempts to convert an integer value to the corresponding enum value of the specified enum type.
+            </summary>
+            <typeparam name="TEnum">The enum type to convert to.</typeparam>
+            <param name="value">The integer value to convert.</param>
+            <param name="result">
+            When this method returns, contains the enum value corresponding to the integer value if the conversion succeeded,
+            or the default value of <typeparamref name="TEnum"/> if the conversion failed.
+            </param>
+            <returns>
+            <c>true</c> if the value was successfully converted to a valid enum value; otherwise, <c>false</c>.
+            </returns>
+        </member>
+    </members>
+</doc>

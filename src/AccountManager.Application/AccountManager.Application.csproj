@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include=" StyleCop.Analyzers" />
+        <PackageReference Include="MediatR" />
+    </ItemGroup>
+  
+    <ItemGroup>
+    <ProjectReference Include="..\AccountManager.Domain\AccountManager.Domain.csproj" />
+    <ProjectReference Include="..\AccountManager.Shared\AccountManager.Shared.csproj" />
+  </ItemGroup>
+  
+    <ItemGroup>
+      <Folder Include="Factories\" />
+    </ItemGroup>
+
+</Project>

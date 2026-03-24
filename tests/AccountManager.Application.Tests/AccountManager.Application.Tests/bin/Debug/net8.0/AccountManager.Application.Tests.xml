@@ -1,0 +1,519 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AccountManager.Application.Tests</name>
+    </assembly>
+    <members>
+        <member name="T:AccountManager.Application.Tests.Commands.AccountStatusTransitCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.AccountStatusTransitCommand.AccountStatusTransitCommandHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AccountStatusTransitCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.AccountStatusTransitCommandHandlerTests"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AccountStatusTransitCommandHandlerTests.Handle_Should_Update_Status_To_Inactive_When_Request_Is_Valid">
+            <summary>
+            Verifies that the handler updates the account status to Inactive
+            and persists an outbox event when valid input is provided.
+            </summary>
+            <returns>
+            A task that represents the asynchronous test execution.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommandHandler"/>.
+            All repository interactions are driven exclusively through <see cref="T:AccountManager.Application.Abstractions.IUnitOfWork"/>
+            using Moq's recursive mock chaining on <c>unitOfWork.User</c>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests"/> class.
+            Sets up shared mocks and the system under test. The <see cref="T:AccountManager.Application.Abstractions.IUnitOfWork"/> mock
+            is created with <c>MockBehavior.Default</c> so that <c>unitOfWork.User</c> is
+            auto-mocked as an interface and supports recursive setup chaining.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenEmailIsNull_ThrowsUserValidationExceptionWithInvalidEmailCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidEmail"
+            is thrown when the email address is null.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenEmailIsEmpty_ThrowsUserValidationExceptionWithInvalidEmailCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidEmail"
+            is thrown when the email address is an empty string.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenFirstNameIsNull_ThrowsUserValidationExceptionWithInvalidFirstNameCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidFirstName"
+            is thrown when the first name is null.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenFirstNameIsEmpty_ThrowsUserValidationExceptionWithInvalidFirstNameCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidFirstName"
+            is thrown when the first name is an empty string.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenLastNameIsNull_ThrowsUserValidationExceptionWithInvalidLastNameCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidLastName"
+            is thrown when the last name is null.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenLastNameIsEmpty_ThrowsUserValidationExceptionWithInvalidLastNameCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidLastName"
+            is thrown when the last name is an empty string.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenEmailAlreadyExists_ThrowsUserValidationExceptionWithEmailAlreadyExistsCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "EmailAlreadyExists"
+            is thrown when <see cref="P:AccountManager.Application.Abstractions.IUnitOfWork.User"/> reports the email address is already taken.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenNameAlreadyExists_ThrowsUserValidationExceptionWithNameAlreadyExistsCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "NameAlreadyExists"
+            is thrown when <see cref="P:AccountManager.Application.Abstractions.IUnitOfWork.User"/> reports the full name is already taken.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenRolesIsNull_ThrowsUserValidationExceptionWithInvalidRolesCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidRoles"
+            is thrown when the roles collection is null.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenRolesIsEmpty_ThrowsUserValidationExceptionWithInvalidRolesCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidRoles"
+            is thrown when the roles collection is empty.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenRolesCombinationIsInvalid_ThrowsUserValidationExceptionWithInvalidRolesCombinationCode">
+            <summary>
+            Verifies that a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/> with code "InvalidRolesCombination"
+            is thrown when the permission calculator deems the supplied roles invalid.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenRequestIsValid_ReturnsPopulatedAddUserCommandResponse">
+            <summary>
+            Verifies that when all inputs are valid, <see cref="M:AccountManager.Application.Commands.AddUserCommand.AddUserCommandHandler.Handle(AccountManager.Application.Commands.AddUserCommand.AddUserCommand,System.Threading.CancellationToken)"/> returns
+            an <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommandResponse"/> populated with the data returned by
+            <see cref="P:AccountManager.Application.Abstractions.IUnitOfWork.User"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.Handle_WhenRequestIsValid_CallsSaveChangesAsyncOnce">
+            <summary>
+            Verifies that <see cref="M:AccountManager.Application.Abstractions.IUnitOfWork.SaveChangesAsync(System.Threading.CancellationToken)"/> is called exactly once
+            when the command completes successfully, ensuring the unit of work commits the transaction.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.BuildCommand(System.String,System.String,System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Builds a valid <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommand"/> with optional property overrides.
+            </summary>
+            <param name="email">The email address to use. Defaults to a valid address.</param>
+            <param name="firstName">The first name to use. Defaults to "John".</param>
+            <param name="lastName">The last name to use. Defaults to "Doe".</param>
+            <param name="roles">The roles list to use. Defaults to a single "Admin" role.</param>
+            <returns>A configured <see cref="T:AccountManager.Application.Commands.AddUserCommand.AddUserCommand"/>.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.SetupNoDuplicates(AccountManager.Application.Commands.AddUserCommand.AddUserCommand,System.Threading.CancellationToken)">
+            <summary>
+            Configures <see cref="P:AccountManager.Application.Abstractions.IUnitOfWork.User"/> via the unit of work mock to return
+            no duplicate email or name matches for any input values.
+            </summary>
+            <param name="command">The command whose context is being stubbed.</param>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.SetupValidPermissions(System.Collections.Generic.List{System.String})">
+            <summary>
+            Configures the permission calculator mock to return a valid result for the given roles.
+            </summary>
+            <param name="roles">The roles to mark as a valid combination.</param>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.AddUserCommand.AddUserCommandHandlerTests.SetupAddUserAsync(AccountManager.Application.Commands.AddUserCommand.AddUserCommand,System.Collections.Generic.List{System.String})">
+            <summary>
+            Configures <see cref="!:IUnitOfWork.User.AddUserAsync"/> via the unit of work mock
+            to return a minimal <see cref="!:UserInfo"/> derived from the supplied command.
+            </summary>
+            <param name="command">The command used to populate the returned user info.</param>
+            <param name="roles">The roles to include in the returned user info.</param>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.CreateAccountCommand.CreateAccountCommandHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_ValidRequest_ReturnsCreateAccountCommandResponse">
+            <summary>
+            Verifies that a valid account creation request returns a successful response.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_MissingAccountName_ThrowsArgumentNullException">
+            <summary>
+            Verifies that an <see cref="T:System.ArgumentNullException"/> is thrown when account name is missing.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_AccountAlreadyExists_ThrowsAccountAlreadyExistsException">
+            <summary>
+            Verifies that an <see cref="T:AccountManager.Domain.Exceptions.AccountAlreadyExistsException"/> is thrown
+            when the account name already exists.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_InvalidAccountType_ThrowsAccountValidationException">
+            <summary>
+            Verifies that an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/> is thrown
+            for an invalid account type.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_ProfessionalAccountWithInvalidInvoiceType_ThrowsAccountValidationException">
+            <summary>
+            Verifies that Professional accounts cannot use non-online payment invoice types.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.CreateAccountCommandHandlerTests.Handle_InvalidTimezone_ThrowsAccountValidationException">
+            <summary>
+            Verifies that an invalid timezone results in an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests">
+            <summary>
+            Contains unit tests for the <see cref="T:AccountManager.Application.Commands.LinkSubAccountCommand.LinkSubAccountCommandHandler"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests"/> class.
+            Sets up common mocks and dependencies used across all tests.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_ValidRequest_SuccessfullyLinksSubAccountToHeadAccount">
+            <summary>
+            Tests that the handler successfully links a sub-account to a head account
+            when all validations pass and no existing relationship exists.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_HeadAccountDoesNotExist_ThrowsAccountValidationException">
+            <summary>
+            Tests that the handler throws an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/>
+            when the head account does not exist in the system.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_SubAccountDoesNotExist_ThrowsAccountValidationException">
+            <summary>
+            Tests that the handler throws an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/>
+            when the sub-account does not exist in the system.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_SubAccountAlreadyLinkedToSameHeadAccount_ThrowsAccountAlreadyLinkedException">
+            <summary>
+            Tests that the handler throws an <see cref="T:AccountManager.Domain.Exceptions.AccountAlreadyLinkedException"/>
+            when the sub-account is already linked to the specified head account.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_SubAccountAlreadyLinkedToDifferentHeadAccount_ThrowsAccountAlreadyLinkedException">
+            <summary>
+            Tests that the handler throws an <see cref="T:AccountManager.Domain.Exceptions.AccountAlreadyLinkedException"/>
+            when the sub-account is already linked to a different head account.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_ValidRequest_CreatesKafkaOutboxEventWithCorrectProperties">
+            <summary>
+            Tests that the handler creates and persists a Kafka outbox event
+            with the correct properties when linking accounts successfully.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.LinkSubAccountCommandHandlerTests.Handle_UnexpectedException_LogsAndThrowsWrappedException">
+            <summary>
+            Tests that the handler wraps and rethrows unexpected exceptions
+            with appropriate logging when an error occurs during processing.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests.Handle_ValidRequest_ShouldUnlinkSubAccountAndReturnResponse">
+            <summary>
+            Verifies that a valid unlink request unlinks the sub-account and returns a successful response.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests.Handle_WhenHeadAccountDoesNotExist_ShouldThrowAccountAlreadyExistsException">
+            <summary>
+            Verifies that an exception is thrown when the head account does not exist.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests.Handle_WhenSubAccountDoesNotExist_ShouldThrowAccountAlreadyExistsException">
+            <summary>
+            Verifies that an exception is thrown when the sub-account does not exist.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests.Handle_WhenRelationshipNotFound_ShouldThrowAccountRelationshipNotFoundException">
+            <summary>
+            Verifies that an exception is thrown when no account relationship exists.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UnlinkSubAccountCommandHandlerTests.CreateHandler">
+            <summary>
+            Creates a new instance of <see cref="T:AccountManager.Application.Commands.UnlinkSubAccountCommand.UnlinkSubAccountCommandHandler"/> with mocked dependencies.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.UpdateAccountCommand.UpdateAccountCommandHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_ValidRequest_ReturnsUpdateAccountCommandResponse">
+            <summary>
+            Verifies that a valid update request returns a successful response.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_MissingAccountName_ThrowsArgumentException">
+            <summary>
+            Verifies that an <see cref="T:System.ArgumentException"/> is thrown when the account name is missing.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_AccountAlreadyExists_ThrowsAccountAlreadyExistsException">
+            <summary>
+            Verifies that an <see cref="T:AccountManager.Domain.Exceptions.AccountAlreadyExistsException"/> is thrown
+            when the account name already exists.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_InvalidAccountType_ThrowsAccountValidationException">
+            <summary>
+            Verifies that an invalid account type results in an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_ProfessionalAccountWithInvalidBillingType_ThrowsAccountValidationException">
+            <summary>
+            Verifies that a Professional account with invalid billing type throws an exception.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateAccountCommandHandlerTests.Handle_InvalidTimezone_ThrowsAccountValidationException">
+            <summary>
+            Verifies that an invalid timezone results in an <see cref="T:AccountManager.Domain.Exceptions.AccountValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Commands.UpdateUserCommand.UpdateUserCommandHandler"/>.
+            Tests both success and error scenarios for updating user information.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests"/> class.
+            Sets up mocked dependencies and the handler under test.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithValidRequest_UpdatesUserSuccessfully">
+            <summary>
+            Verifies that a valid request updates the user successfully
+            and persists changes to the database.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithInvalidEmail_ThrowsUserValidationException">
+            <summary>
+            Verifies that an invalid email format throws a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithEmptyFirstName_ThrowsUserValidationException">
+            <summary>
+            Verifies that an empty first name throws a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithEmptyLastName_ThrowsUserValidationException">
+            <summary>
+            Verifies that an empty last name throws a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithNonExistentUser_ThrowsUserNotFoundException">
+            <summary>
+            Verifies that a non-existent user throws a <see cref="T:AccountManager.Domain.Exceptions.UserNotFoundException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Commands.UpdateUserCommandTests.UpdateUserCommandHandlerTests.Handle_WithDuplicateEmail_ThrowsUserValidationException">
+            <summary>
+            Verifies that attempting to update with a duplicate email throws a <see cref="T:AccountManager.Domain.Exceptions.UserValidationException"/>.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Queries.GetAccountDetailsQueryHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetAccountDetailsQueryHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Queries.GetAccountDetailsQueryHandlerTests"/> class
+            and sets up the required mocks.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetAccountDetailsQueryHandlerTests.Handle_WhenAccountExists_ReturnsMappedResponse">
+            <summary>
+            Verifies that the handler returns a fully mapped
+            <see cref="T:AccountManager.Application.Queries.GetAccountDetailsQuery.GetAccountDetailsQueryResponse"/> when the account exists.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Queries.GetAccountProductsQueryHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Queries.GetAccountProductsQuery.GetAccountProductsQueryHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetAccountProductsQueryHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Queries.GetAccountProductsQueryHandlerTests"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetAccountProductsQueryHandlerTests.Handle_WhenProductsExist_ReturnsPagedResponse">
+            <summary>
+            Verifies that handler returns mapped products and pagination metadata.
+            </summary>
+            <returns>A task representing the asynchronous test operation.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetAccountProductsQueryHandlerTests.Handle_WhenPagingValuesInvalid_NormalizesPaging">
+            <summary>
+            Verifies that invalid pagination inputs are normalized to defaults.
+            </summary>
+            <returns>A task representing the asynchronous test operation.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Queries.GetTimezoneQueryHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Queries.GetTimezoneQuery.GetTimezoneQueryHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetTimezoneQueryHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Queries.GetTimezoneQueryHandlerTests"/> class
+            and sets up required dependencies.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetTimezoneQueryHandlerTests.Handle_WhenTimezonesExist_ReturnsTimezoneList">
+            <summary>
+            Ensures that the handler returns a populated list of timezones
+            when the repository provides available timezones.
+            </summary>
+            <returns>Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetTimezoneQueryHandlerTests.Handle_WhenNoTimezonesExist_ReturnsEmptyList">
+            <summary>
+            Ensures that the handler returns an empty timezone list
+            when the repository returns no timezones.
+            </summary>
+            <returns> Task representing the asynchronous unit test.</returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryHandler"/>.
+            Tests both success and error scenarios for retrieving user profile information.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests"/> class.
+            Sets up mocked dependencies and the handler under test.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests.Handle_WithValidUserId_ReturnsUserProfile">
+            <summary>
+            Verifies that a valid user ID returns a populated <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/>.
+            </summary>
+            <returns>
+            A <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/> containing:
+            <list type="bullet">
+            <item><description>UserId matching the request.</description></item>
+            <item><description>AccountId of the user.</description></item>
+            <item><description>Email, FirstName, LastName, Roles, IsActive, LastLoginAt, and LoginCount.</description></item>
+            </list>
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests.Handle_WithInvalidUserId_ThrowsUserNotFoundException">
+            <summary>
+            Verifies that an invalid user ID throws a <see cref="T:AccountManager.Domain.Exceptions.UserNotFoundException"/>.
+            </summary>
+            <returns>
+            An exception of type <see cref="T:AccountManager.Domain.Exceptions.UserNotFoundException"/> indicating the user does not exist.
+            </returns>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.GetUserQueryTests.GetUserQueryHandlerTests.Handle_WithValidUser_CalculatesPermissions">
+            <summary>
+            Verifies that when a valid user is retrieved, permissions are calculated
+            and returned in the <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/>.
+            </summary>
+            <returns>
+            A <see cref="T:AccountManager.Application.Queries.GetUserQuery.GetUserQueryResponse"/> containing the user's profile and calculated permissions.
+            Example: <c>{ Read = true, Write = false }</c>.
+            </returns>
+        </member>
+        <member name="T:AccountManager.Application.Tests.Queries.ListAccountUsersQueryHandlerTests">
+            <summary>
+            Unit tests for <see cref="T:AccountManager.Application.Queries.ListAccountUsersQuery.ListAccountUsersQueryHandler"/>.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.ListAccountUsersQueryHandlerTests.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AccountManager.Application.Tests.Queries.ListAccountUsersQueryHandlerTests"/> class.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.ListAccountUsersQueryHandlerTests.Handle_WhenUsersExist_ReturnsPagedResponse">
+            <summary>
+            Verifies that handler returns mapped users and pagination metadata.
+            </summary>
+        </member>
+        <member name="M:AccountManager.Application.Tests.Queries.ListAccountUsersQueryHandlerTests.Handle_WhenPagingValuesInvalid_NormalizesPaging">
+            <summary>
+            Verifies that invalid pagination inputs are normalized to defaults.
+            </summary>
+        </member>
+    </members>
+</doc>

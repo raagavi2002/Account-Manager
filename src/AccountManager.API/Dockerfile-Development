@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS base
+WORKDIR /app
+
+ENV ASPNETCORE_URLS=http://+:8081
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+WORKDIR /src
+
+COPY ["src/AccountManager.Domain/AccountManager.Domain.csproj", "src/Domain/"]
+COPY ["src/AccountManager.Shared/AccountManager.Shared.csproj", "src/Shared/"]
+COPY ["src/AccountManager.Infrastructure/AccountManager.Infrastructure.csproj", "src/Persistence/"]
+COPY ["src/AccountManager.Application/AccountManager.Application.csproj", "src/Application/"]
+COPY ["src/AccountManager.API/AccountManager.API.csproj", "src/AccountManager.API/"]
+
+RUN dotnet restore "./src/AccountManager.API/AccountManager.API.csproj"
+COPY . .
+WORKDIR "./src/AccountManager.API"
+
+RUN dotnet build "AccountManager.API.csproj" -c Release -o /app/build 
+
+FROM build AS publish
+RUN dotnet publish "AccountManager.API.csproj" -c Release -o /app/publish \
+  && cp "appsettings.Development.json" /app/publish/appsettings.Development.json
+
+FROM base AS final
+COPY --from=publish /app/publish .
+ENTRYPOINT ["./AccountManager.API"]
